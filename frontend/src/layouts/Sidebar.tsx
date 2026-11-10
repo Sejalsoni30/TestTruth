@@ -12,6 +12,7 @@ import {
   Settings,
   ShieldCheck,
   ChevronDown,
+  CreditCard,
 } from 'lucide-react';
 import { useProject } from '../context/ProjectContext.js';
 
@@ -27,6 +28,7 @@ export const Sidebar: React.FC = () => {
     { to: '/execution-details', label: 'Execution Sandbox', icon: Terminal },
     { to: '/ai-scenarios', label: 'AI Scenarios', icon: Sparkles },
     { to: '/reports', label: 'Audit Reports', icon: FileText },
+    { to: '/pricing', label: 'Pricing Plans', icon: CreditCard },
     { to: '/settings', label: 'Engine Settings', icon: Settings },
   ];
 

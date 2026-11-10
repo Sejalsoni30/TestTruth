@@ -28,6 +28,15 @@ export const authService = {
     return res;
   },
 
+  async demoLogin(): Promise<AuthResponse> {
+    const res = await request<AuthResponse>('/auth/demo-login', {
+      method: 'POST',
+    });
+    localStorage.setItem('testtruth_token', res.token);
+    localStorage.setItem('testtruth_user', JSON.stringify(res.user));
+    return res;
+  },
+
   async getCurrentUser(): Promise<User> {
     const res = await request<{ user: User }>('/auth/me', {
       method: 'GET',

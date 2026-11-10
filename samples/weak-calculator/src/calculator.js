@@ -38,3 +38,4 @@ module.exports = {
   isPositive,
   calculateDiscount,
 };
+

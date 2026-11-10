@@ -6,6 +6,7 @@ import { ThemeProvider } from './context/ThemeContext.js';
 import { AppLayout } from './layouts/AppLayout.js';
 
 import { LandingPage } from './pages/LandingPage.js';
+import { PricingPage } from './pages/PricingPage.js';
 import { LoginPage } from './pages/LoginPage.js';
 import { RegisterPage } from './pages/RegisterPage.js';
 import { DashboardPage } from './pages/DashboardPage.js';
@@ -45,6 +46,7 @@ export function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
 

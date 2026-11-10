@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { ENV } from './config/env.js';
 import { connectDB } from './config/db.js';
+import { seedDemoDataIfEmpty } from './services/seedDemoData.js';
 import { authRouter } from './routes/authRoutes.js';
 import { projectRouter } from './routes/projectRoutes.js';
 import { runRouter } from './routes/runRoutes.js';
@@ -48,6 +49,8 @@ export async function startServer() {
   try {
     const dbUri = await connectDB();
     console.log(`[TestTruth API] Database initialized: ${dbUri}`);
+
+    await seedDemoDataIfEmpty();
 
     const server = app.listen(ENV.PORT, () => {
       console.log(`[TestTruth API] Server listening on http://localhost:${ENV.PORT}`);

@@ -33,3 +33,4 @@ test('clamp limits value between min and max', () => {
   assert.strictEqual(clamp(25, 10, 20), 20);
   assert.strictEqual(clamp(15, 10, 20), 15);
 });
+

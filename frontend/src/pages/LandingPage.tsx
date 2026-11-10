@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ShieldCheck,
   Dna,
@@ -12,9 +12,28 @@ import {
 import { Button } from '../components/common/Button.js';
 import { Card } from '../components/common/Card.js';
 import { Badge } from '../components/common/Badge.js';
+import { authService } from '../services/authService.js';
+import { useAuth } from '../context/AuthContext.js';
 
 export const LandingPage: React.FC = () => {
   const [demoSelectedMutant, setDemoSelectedMutant] = useState<number>(0);
+  const [demoLoading, setDemoLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleDemoAccess = async () => {
+    setDemoLoading(true);
+    try {
+      const res = await authService.demoLogin();
+      login(res.token, res.user);
+      navigate('/projects');
+    } catch (err) {
+      console.error('Demo login error:', err);
+      navigate('/login');
+    } finally {
+      setDemoLoading(false);
+    }
+  };
 
   const sampleMutants = [
     {
@@ -70,8 +89,19 @@ export const LandingPage: React.FC = () => {
             <span className="font-bold text-lg font-mono text-body tracking-tight">TestTruth</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Link to="/login" className="text-xs text-muted hover:text-body font-medium px-3 py-1.5 transition-colors">
+          <nav className="flex items-center gap-5">
+            <Link to="/pricing" className="text-xs text-muted hover:text-accent font-semibold px-2 py-1 transition-colors">
+              Pricing
+            </Link>
+            <button
+              onClick={handleDemoAccess}
+              disabled={demoLoading}
+              className="text-xs text-accent hover:text-accent-hover font-semibold px-2 py-1 transition-colors inline-flex items-center gap-1"
+            >
+              <Sparkles className="w-3.5 h-3.5 fill-current" />
+              <span>Launch Demo</span>
+            </button>
+            <Link to="/login" className="text-xs text-muted hover:text-body font-medium px-2 py-1 transition-colors">
               Log in
             </Link>
             <Link to="/register">
@@ -79,7 +109,7 @@ export const LandingPage: React.FC = () => {
                 Get Started
               </Button>
             </Link>
-          </div>
+          </nav>
         </div>
       </header>
 
@@ -106,16 +136,25 @@ export const LandingPage: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              size="lg"
+              variant="primary"
+              onClick={handleDemoAccess}
+              isLoading={demoLoading}
+              leftIcon={<Sparkles className="w-4 h-4 fill-current" />}
+            >
+              Launch Live Demo Workspace
+            </Button>
             <Link to="/register">
-              <Button size="lg" variant="primary" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                Start Free Test Audit
+              <Button size="lg" variant="secondary" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                Create Free Account
               </Button>
             </Link>
-            <a href="#interactive-demo">
-              <Button size="lg" variant="secondary">
-                View Interactive Demo
+            <Link to="/pricing">
+              <Button size="lg" variant="ghost" className="text-white hover:text-white/80">
+                View Pricing
               </Button>
-            </a>
+            </Link>
           </div>
 
           {/* Social Proof Callout */}
@@ -325,6 +364,7 @@ export const LandingPage: React.FC = () => {
             <span>TestTruth © 2026. Auditing test suite reliability with measurable proof.</span>
           </div>
           <div className="flex items-center gap-6">
+            <Link to="/pricing" className="hover:text-body">Pricing</Link>
             <Link to="/login" className="hover:text-body">Log In</Link>
             <Link to="/register" className="hover:text-body">Register</Link>
             <a href="#interactive-demo" className="hover:text-body">Interactive Demo</a>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Lock, Mail, AlertCircle, Sparkles } from 'lucide-react';
 import { authService } from '../services/authService.js';
 import { useAuth } from '../context/AuthContext.js';
 import { Button } from '../components/common/Button.js';
@@ -11,9 +11,24 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
   const { login: setAuthUser } = useAuth();
   const navigate = useNavigate();
+
+  const handleDemoLogin = async () => {
+    setError(null);
+    setDemoLoading(true);
+    try {
+      const res = await authService.demoLogin();
+      setAuthUser(res.token, res.user);
+      navigate('/projects');
+    } catch (err: any) {
+      setError(err.message || 'Demo sign-in failed');
+    } finally {
+      setDemoLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +114,20 @@ export const LoginPage: React.FC = () => {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-border text-center text-xs text-muted">
+          <div className="mt-4 pt-4 border-t border-border">
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full justify-center text-xs font-semibold"
+              onClick={handleDemoLogin}
+              isLoading={demoLoading}
+              leftIcon={<Sparkles className="w-3.5 h-3.5 text-accent fill-current" />}
+            >
+              Explore Demo Workspace (1-Click)
+            </Button>
+          </div>
+
+          <div className="mt-4 text-center text-xs text-muted">
             Don't have an account?{' '}
             <Link to="/register" className="text-accent hover:text-accent-hover font-semibold">
               Create an account

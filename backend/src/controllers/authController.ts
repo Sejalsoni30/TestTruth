@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { User } from '../models/User.js';
 import { ENV } from '../config/env.js';
 import { AuthRequest } from '../middleware/auth.js';
+import { seedDemoDataIfEmpty } from '../services/seedDemoData.js';
 
 const registerSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -100,6 +101,33 @@ export async function getCurrentUser(req: AuthRequest, res: Response): Promise<v
   }
 
   res.status(200).json({
+    user: {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      createdAt: user.createdAt,
+    },
+  });
+}
+
+export async function demoLogin(req: Request, res: Response): Promise<void> {
+  let user = await User.findOne({ email: 'demo@testtruth.io' });
+  if (!user) {
+    await seedDemoDataIfEmpty();
+    user = await User.findOne({ email: 'demo@testtruth.io' });
+  }
+
+  if (!user) {
+    res.status(500).json({ error: 'Demo workspace initialization failed' });
+    return;
+  }
+
+  const token = signToken(user._id.toString(), user.email, user.role);
+
+  res.status(200).json({
+    message: 'Authenticated as Demo Lead',
+    token,
     user: {
       id: user._id,
       email: user.email,
