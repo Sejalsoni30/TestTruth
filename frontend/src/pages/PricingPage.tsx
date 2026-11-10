@@ -16,6 +16,7 @@ import {
 import { Card } from '../components/common/Card.js';
 import { Button } from '../components/common/Button.js';
 import { Badge } from '../components/common/Badge.js';
+import { Footer } from '../components/common/Footer.js';
 import { authService } from '../services/authService.js';
 import { useAuth } from '../context/AuthContext.js';
 
@@ -418,21 +419,8 @@ export const PricingPage: React.FC = () => {
         </Card>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-10 px-6 text-center text-xs text-muted">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 font-mono">
-            <ShieldCheck className="w-4 h-4 text-accent" />
-            <span>TestTruth © 2026. Auditing test suite reliability with measurable proof.</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link to="/" className="hover:text-body">Home</Link>
-            <Link to="/pricing" className="text-accent font-semibold">Pricing</Link>
-            <Link to="/login" className="hover:text-body">Log In</Link>
-            <Link to="/register" className="hover:text-body">Register</Link>
-          </div>
-        </div>
-      </footer>
+      {/* Reusable Comprehensive 4-Column Footer */}
+      <Footer />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { seedDemoDataIfEmpty } from './services/seedDemoData.js';
 import { authRouter } from './routes/authRoutes.js';
 import { projectRouter } from './routes/projectRoutes.js';
 import { runRouter } from './routes/runRoutes.js';
+import { contactRouter } from './routes/contactRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -41,6 +42,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/projects', projectRouter);
 app.use('/api/runs', runRouter);
+app.use('/api/contact', contactRouter);
 
 // Global Error Handler
 app.use(errorHandler);

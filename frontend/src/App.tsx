@@ -7,6 +7,17 @@ import { AppLayout } from './layouts/AppLayout.js';
 
 import { LandingPage } from './pages/LandingPage.js';
 import { PricingPage } from './pages/PricingPage.js';
+import { LegalPage } from './pages/LegalPage.js';
+import { MethodologyPage } from './pages/MethodologyPage.js';
+import { SecurityPage } from './pages/SecurityPage.js';
+import { AboutPage } from './pages/AboutPage.js';
+import { ContactPage } from './pages/ContactPage.js';
+import { FaqPage } from './pages/FaqPage.js';
+import { ChangelogPage } from './pages/ChangelogPage.js';
+import { DocsPage } from './pages/DocsPage.js';
+import { GuidesPage } from './pages/GuidesPage.js';
+import { ApiReferencePage } from './pages/ApiReferencePage.js';
+import { NotFoundPage } from './pages/NotFoundPage.js';
 import { LoginPage } from './pages/LoginPage.js';
 import { RegisterPage } from './pages/RegisterPage.js';
 import { DashboardPage } from './pages/DashboardPage.js';
@@ -47,6 +58,19 @@ export function App() {
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/legal/:type" element={<LegalPage />} />
+              <Route path="/methodology" element={<MethodologyPage />} />
+              <Route path="/security" element={<SecurityPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/changelog" element={<ChangelogPage />} />
+              <Route path="/docs" element={<DocsPage />} />
+              <Route path="/docs/:slug" element={<DocsPage />} />
+              <Route path="/guides" element={<GuidesPage />} />
+              <Route path="/guides/:slug" element={<GuidesPage />} />
+              <Route path="/api-reference" element={<ApiReferencePage />} />
+              <Route path="/api-docs" element={<ApiReferencePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
 
@@ -71,7 +95,7 @@ export function App() {
               </Route>
 
               {/* Fallback */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </ProjectProvider>
         </AuthProvider>
