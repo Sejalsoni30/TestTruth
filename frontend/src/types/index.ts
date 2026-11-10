@@ -127,6 +127,13 @@ export interface AnalysisRun {
   projectId: Project | string;
   status: 'queued' | 'running' | 'completed' | 'failed';
   triggerType: 'manual' | 'ci' | 'upload';
+  isIncremental?: boolean;
+  changedFilesCount?: number;
+  reusedMutantsCount?: number;
+  runModeLabel?: string;
+  progressStage?: 'queued' | 'running tests' | 'mutating' | 'analysing' | 'done' | 'failed';
+  progressMessage?: string;
+  dockerAvailable?: boolean;
   summaryMetrics: {
     totalTests: number;
     passedExecution: number;
@@ -151,6 +158,21 @@ export interface AnalysisRun {
   startedAt: string;
   completedAt?: string;
   createdAt: string;
+}
+
+export interface RunStatusResponse {
+  runId: string;
+  status: 'queued' | 'running' | 'completed' | 'failed';
+  progressStage: 'queued' | 'running tests' | 'mutating' | 'analysing' | 'done' | 'failed';
+  progressMessage: string;
+  isIncremental: boolean;
+  changedFilesCount: number;
+  reusedMutantsCount: number;
+  runModeLabel: string;
+  durationMs: number;
+  dockerAvailable: boolean;
+  summaryMetrics?: AnalysisRun['summaryMetrics'];
+  errorMessage?: string;
 }
 
 export interface DashboardMetrics {

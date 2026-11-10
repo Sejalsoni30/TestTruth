@@ -3,7 +3,79 @@ import mongoose from 'mongoose';
 import { Project } from '../models/Project.js';
 import { AnalysisRun } from '../models/AnalysisRun.js';
 import { Finding } from '../models/Finding.js';
+import { executeProjectAnalysis } from '../services/analysisPipelineService.js';
 import { MutationResult } from '../models/MutationResult.js';
+
+export async function startAnalysisRun(req: AuthRequest, res: Response): Promise<void> {
+  const { projectId, forceFullRun } = req.body;
+  const userId = req.user!.userId;
+
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    res.status(400).json({ error: 'Invalid project ID' });
+    return;
+  }
+
+  const project = await Project.findOne({ _id: projectId, userId });
+  if (!project) {
+    res.status(404).json({ error: 'Project not found' });
+    return;
+  }
+
+  // Create queued run record
+  const run = await AnalysisRun.create({
+    projectId: project._id,
+    userId,
+    status: 'running',
+    progressStage: 'queued',
+    progressMessage: 'Initializing sandbox environment...',
+    triggerType: 'manual',
+    isIncremental: false,
+    changedFilesCount: 0,
+    reusedMutantsCount: 0,
+    runModeLabel: forceFullRun ? 'Force full run' : 'Analyzing changes...',
+  });
+
+  // Execute pipeline in background
+  executeProjectAnalysis(run._id.toString(), !!forceFullRun).catch((err) => {
+    console.error(`[AnalysisRun] Error in run ${run._id}:`, err);
+  });
+
+  res.status(202).json({
+    message: 'Analysis run initiated',
+    runId: run._id,
+    status: run.status,
+  });
+}
+
+export async function getRunStatus(req: AuthRequest, res: Response): Promise<void> {
+  const { runId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(runId)) {
+    res.status(400).json({ error: 'Invalid run ID' });
+    return;
+  }
+
+  const run = await AnalysisRun.findById(runId);
+  if (!run) {
+    res.status(404).json({ error: 'Analysis run not found' });
+    return;
+  }
+
+  res.status(200).json({
+    runId: run._id,
+    status: run.status,
+    progressStage: run.progressStage,
+    progressMessage: run.progressMessage,
+    isIncremental: run.isIncremental,
+    changedFilesCount: run.changedFilesCount,
+    reusedMutantsCount: run.reusedMutantsCount,
+    runModeLabel: run.runModeLabel,
+    durationMs: run.executionSandbox?.durationMs || 0,
+    dockerAvailable: run.dockerAvailable,
+    summaryMetrics: run.summaryMetrics,
+    errorMessage: run.errorMessage,
+  });
+}
 import { AuthRequest } from '../middleware/auth.js';
 
 export async function getDashboardMetrics(req: AuthRequest, res: Response): Promise<void> {

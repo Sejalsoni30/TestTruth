@@ -6,6 +6,7 @@ export interface ISourceFile extends Document {
   fileType: 'source' | 'test' | 'config' | 'other';
   language: 'javascript' | 'typescript';
   content: string;
+  contentHash: string;
   sizeBytes: number;
   astSummary?: {
     functions: Array<{
@@ -52,6 +53,11 @@ const SourceFileSchema = new Schema<ISourceFile>(
     content: {
       type: String,
       required: true,
+    },
+    contentHash: {
+      type: String,
+      default: '',
+      index: true,
     },
     sizeBytes: {
       type: Number,

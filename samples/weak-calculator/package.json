@@ -1,0 +1,12 @@
+{
+  "name": "weak-calculator",
+  "version": "1.0.0",
+  "description": "Sample calculator project with deliberately weak test suite",
+  "main": "src/calculator.js",
+  "scripts": {
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": ["testtruth", "sample", "mutation-testing"],
+  "author": "TestTruth Suite",
+  "license": "MIT"
+}

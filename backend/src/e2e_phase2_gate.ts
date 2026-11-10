@@ -11,7 +11,7 @@ async function runE2EGate() {
     // 1. Health check
     console.log('\n[1/7] Testing API Health endpoint...');
     const healthRes = await fetch(`${BASE_URL}/health`);
-    const healthData = await healthRes.json();
+    const healthData = (await healthRes.json()) as any;
     console.log('✓ Health Status:', healthData.status, '| Service:', healthData.service);
 
     // 2. User Registration
@@ -25,7 +25,7 @@ async function runE2EGate() {
         name: 'Alex Rivera',
       }),
     });
-    const registerData = await registerRes.json();
+    const registerData = (await registerRes.json()) as any;
     if (!registerRes.ok) throw new Error(`Registration failed: ${JSON.stringify(registerData)}`);
     console.log('✓ User registered successfully:', registerData.user.email, '| ID:', registerData.user.id);
     const token = registerData.token;
@@ -40,7 +40,7 @@ async function runE2EGate() {
         password: 'SuperSecretPassword2026!',
       }),
     });
-    const loginData = await loginRes.json();
+    const loginData = (await loginRes.json()) as any;
     if (!loginRes.ok) throw new Error(`Login failed: ${JSON.stringify(loginData)}`);
     console.log('✓ Login authenticated. Token received length:', loginData.token.length);
 
@@ -49,7 +49,7 @@ async function runE2EGate() {
     const meRes = await fetch(`${BASE_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const meData = await meRes.json();
+    const meData = (await meRes.json()) as any;
     if (!meRes.ok) throw new Error(`Me endpoint failed: ${JSON.stringify(meData)}`);
     console.log('✓ Auth session verified for:', meData.user.name, `(${meData.user.role})`);
 
@@ -68,7 +68,7 @@ async function runE2EGate() {
         language: 'typescript',
       }),
     });
-    const projectData = await projectRes.json();
+    const projectData = (await projectRes.json()) as any;
     if (!projectRes.ok) throw new Error(`Project creation failed: ${JSON.stringify(projectData)}`);
     const projectId = projectData.project._id;
     console.log('✓ Project created:', projectData.project.name, '| ID:', projectId);
@@ -78,7 +78,7 @@ async function runE2EGate() {
     const metricsRes = await fetch(`${BASE_URL}/runs/dashboard-metrics`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const metricsData = await metricsRes.json();
+    const metricsData = (await metricsRes.json()) as any;
     if (!metricsRes.ok) throw new Error(`Metrics failed: ${JSON.stringify(metricsData)}`);
     console.log('✓ Dashboard Metrics received:');
     console.log('   - Total Projects:', metricsData.metrics.totalProjects);
@@ -99,7 +99,7 @@ async function runE2EGate() {
         confirmProjectName: 'Billing Gateway Service',
       }),
     });
-    const deleteData = await deleteRes.json();
+    const deleteData = (await deleteRes.json()) as any;
     if (!deleteRes.ok) throw new Error(`Delete failed: ${JSON.stringify(deleteData)}`);
     console.log('✓ Project successfully deleted:', deleteData.message);
 

@@ -1,5 +1,5 @@
 import { request } from './api.js';
-import { DashboardMetrics, AnalysisRun, Finding, MutationResult } from '../types/index.js';
+import { DashboardMetrics, AnalysisRun, Finding, MutationResult, RunStatusResponse } from '../types/index.js';
 
 export interface RunDetailsResponse {
   run: AnalysisRun;
@@ -20,5 +20,17 @@ export const runService = {
   async getRunDetails(runId: string): Promise<RunDetailsResponse> {
     return request<RunDetailsResponse>(`/runs/${runId}`);
   },
+
+  async startAnalysisRun(projectId: string, forceFullRun = false): Promise<{ message: string; runId: string; status: string }> {
+    return request<{ message: string; runId: string; status: string }>('/runs/start', {
+      method: 'POST',
+      body: JSON.stringify({ projectId, forceFullRun }),
+    });
+  },
+
+  async getRunStatus(runId: string): Promise<RunStatusResponse> {
+    return request<RunStatusResponse>(`/runs/${runId}/status`);
+  },
 };
+
 

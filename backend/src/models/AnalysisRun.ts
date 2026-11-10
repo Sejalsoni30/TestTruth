@@ -18,6 +18,14 @@ export interface IAnalysisRun extends Document {
     missingScenariosCount: number;
     totalFindings: number;
   };
+  isIncremental: boolean;
+  changedFilesCount: number;
+  reusedMutantsCount: number;
+  fileHashes: Record<string, string>;
+  runModeLabel: string;
+  progressStage: 'queued' | 'running tests' | 'mutating' | 'analysing' | 'done' | 'failed';
+  progressMessage: string;
+  dockerAvailable: boolean;
   honestyDisclosures: string[];
   executionSandbox: {
     type: 'docker' | 'process_isolated';
@@ -57,6 +65,18 @@ const AnalysisRunSchema = new Schema<IAnalysisRun>(
       enum: ['manual', 'ci', 'upload'],
       default: 'manual',
     },
+    isIncremental: { type: Boolean, default: false },
+    changedFilesCount: { type: Number, default: 0 },
+    reusedMutantsCount: { type: Number, default: 0 },
+    fileHashes: { type: Schema.Types.Mixed, default: {} },
+    runModeLabel: { type: String, default: 'Full run' },
+    progressStage: {
+      type: String,
+      enum: ['queued', 'running tests', 'mutating', 'analysing', 'done', 'failed'],
+      default: 'queued',
+    },
+    progressMessage: { type: String, default: 'Analysis run queued...' },
+    dockerAvailable: { type: Boolean, default: false },
     summaryMetrics: {
       totalTests: { type: Number, default: 0 },
       passedExecution: { type: Number, default: 0 },

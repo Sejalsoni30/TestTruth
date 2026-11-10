@@ -5,6 +5,8 @@ import {
   getProject,
   deleteProject,
   uploadProjectFiles,
+  getProjectFile,
+  updateProjectFile,
 } from '../controllers/projectController.js';
 import { requireAuth } from '../middleware/auth.js';
 import { uploadZipOrFiles } from '../middleware/uploadSecurity.js';
@@ -18,4 +20,6 @@ projectRouter.get('/', listProjects);
 projectRouter.get('/:id', getProject);
 projectRouter.delete('/:id', deleteProject);
 projectRouter.post('/:id/upload', uploadZipOrFiles.array('files', 50), uploadProjectFiles);
+projectRouter.get('/:id/files/:fileId', getProjectFile);
+projectRouter.put('/:id/files/:fileId', updateProjectFile);
 

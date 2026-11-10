@@ -10,6 +10,7 @@ import { Finding } from '../models/Finding.js';
 import { MutationResult } from '../models/MutationResult.js';
 import { AuthRequest } from '../middleware/auth.js';
 import { validateAndExtractZip } from '../utils/zipValidator.js';
+import { computeContentHash } from '../services/fileHashService.js';
 
 const createProjectSchema = z.object({
   name: z.string().min(2, 'Project name must be at least 2 characters').max(60),
@@ -199,6 +200,7 @@ export async function uploadProjectFiles(req: AuthRequest, res: Response): Promi
             fileType,
             language: isTs ? 'typescript' : 'javascript',
             content,
+            contentHash: computeContentHash(content),
             sizeBytes: entry.size,
           });
         }
@@ -215,12 +217,14 @@ export async function uploadProjectFiles(req: AuthRequest, res: Response): Promi
         else sourceFilesCount++;
         totalFiles++;
 
+        const contentStr = file.buffer.toString('utf8');
         await SourceFile.create({
           projectId: project._id,
           relativePath: file.originalname,
           fileType,
           language: isTs ? 'typescript' : 'javascript',
-          content: file.buffer.toString('utf8'),
+          content: contentStr,
+          contentHash: computeContentHash(contentStr),
           sizeBytes: file.size,
         });
       }
@@ -264,4 +268,54 @@ export async function uploadProjectFiles(req: AuthRequest, res: Response): Promi
     }
   }
 }
+
+export async function getProjectFile(req: AuthRequest, res: Response): Promise<void> {
+  const { id, fileId } = req.params;
+  const userId = req.user!.userId;
+
+  const project = await Project.findOne({ _id: id, userId });
+  if (!project) {
+    res.status(404).json({ error: 'Project not found' });
+    return;
+  }
+
+  const file = await SourceFile.findOne({ _id: fileId, projectId: project._id });
+  if (!file) {
+    res.status(404).json({ error: 'File not found' });
+    return;
+  }
+
+  res.status(200).json({ file });
+}
+
+export async function updateProjectFile(req: AuthRequest, res: Response): Promise<void> {
+  const { id, fileId } = req.params;
+  const { content } = req.body;
+  const userId = req.user!.userId;
+
+  const project = await Project.findOne({ _id: id, userId });
+  if (!project) {
+    res.status(404).json({ error: 'Project not found' });
+    return;
+  }
+
+  const file = await SourceFile.findOne({ _id: fileId, projectId: project._id });
+  if (!file) {
+    res.status(404).json({ error: 'File not found' });
+    return;
+  }
+
+  if (typeof content !== 'string') {
+    res.status(400).json({ error: 'Content must be a string' });
+    return;
+  }
+
+  file.content = content;
+  file.contentHash = computeContentHash(content);
+  file.sizeBytes = Buffer.byteLength(content, 'utf8');
+  await file.save();
+
+  res.status(200).json({ message: 'File updated successfully', file });
+}
+
 
