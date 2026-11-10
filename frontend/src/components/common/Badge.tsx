@@ -1,50 +1,95 @@
 import React from 'react';
+import {
+  AlertOctagon,
+  AlertTriangle,
+  Info,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  HelpCircle,
+} from 'lucide-react';
 
 interface BadgeProps {
   children: React.ReactNode;
   variant?:
+    | 'critical'
+    | 'high'
+    | 'medium'
+    | 'low'
+    | 'info'
     | 'mismatch'
     | 'survived'
     | 'weak'
     | 'missing'
     | 'inconclusive'
-    | 'success'
-    | 'indigo'
-    | 'cyan'
-    | 'slate';
+    | 'killed'
+    | 'timeout'
+    | 'accent'
+    | 'neutral';
   size?: 'sm' | 'md';
+  icon?: React.ReactNode;
   className?: string;
 }
 
 export const Badge: React.FC<BadgeProps> = ({
   children,
-  variant = 'slate',
+  variant = 'neutral',
   size = 'md',
+  icon,
   className = '',
 }) => {
   const sizeStyles = {
-    sm: 'text-[11px] px-2 py-0.5 font-medium',
-    md: 'text-xs px-2.5 py-1 font-medium',
+    sm: 'text-[11px] px-2.5 py-0.5 font-medium gap-1',
+    md: 'text-xs px-3 py-1 font-medium gap-1.5',
   };
 
+  // Distinct hues strictly from the warm semantic specification
   const variantStyles = {
-    mismatch: 'bg-red-500/10 text-red-400 border border-red-500/20',
-    survived: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
-    weak: 'bg-amber-500/10 text-amber-300 border border-amber-500/20',
-    missing: 'bg-purple-500/10 text-purple-300 border border-purple-500/20',
-    inconclusive: 'bg-slate-500/10 text-slate-400 border border-slate-500/20',
-    success: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
-    indigo: 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/20',
-    cyan: 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/20',
-    slate: 'bg-slate-800 text-slate-300 border border-slate-700',
+    critical: 'bg-critical/15 text-critical border border-critical/30',
+    high: 'bg-high/15 text-high border border-high/30',
+    medium: 'bg-medium/15 text-medium border border-medium/30',
+    low: 'bg-low/15 text-low border border-low/30',
+    info: 'bg-info/15 text-info border border-info/30',
+
+    // Findings
+    mismatch: 'bg-critical/15 text-critical border border-critical/30',
+    survived: 'bg-critical/15 text-critical border border-critical/30',
+    weak: 'bg-medium/15 text-medium border border-medium/30',
+    missing: 'bg-high/15 text-high border border-high/30',
+    inconclusive: 'bg-info/15 text-info border border-info/30',
+
+    // Mutation outcomes
+    killed: 'bg-low/15 text-low border border-low/30',
+    timeout: 'bg-medium/15 text-medium border border-medium/30',
+
+    accent: 'bg-accent/20 text-body border border-accent/40',
+    neutral: 'bg-surface-raised text-muted border border-border',
   };
+
+  // Default accessible icons for status
+  const defaultIcons: Record<string, React.ReactNode> = {
+    critical: <AlertOctagon className="w-3 h-3 shrink-0" />,
+    mismatch: <AlertOctagon className="w-3 h-3 shrink-0" />,
+    survived: <XCircle className="w-3 h-3 shrink-0" />,
+    high: <AlertTriangle className="w-3 h-3 shrink-0" />,
+    missing: <AlertTriangle className="w-3 h-3 shrink-0" />,
+    medium: <HelpCircle className="w-3 h-3 shrink-0" />,
+    weak: <HelpCircle className="w-3 h-3 shrink-0" />,
+    timeout: <Clock className="w-3 h-3 shrink-0" />,
+    low: <CheckCircle2 className="w-3 h-3 shrink-0" />,
+    killed: <CheckCircle2 className="w-3 h-3 shrink-0" />,
+    info: <Info className="w-3 h-3 shrink-0" />,
+    inconclusive: <Info className="w-3 h-3 shrink-0" />,
+  };
+
+  const renderIcon = icon !== undefined ? icon : defaultIcons[variant];
 
   return (
     <span
       className={`inline-flex items-center rounded-full tracking-wide select-none ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
     >
-      {children}
+      {renderIcon}
+      <span>{children}</span>
     </span>
   );
 };
-

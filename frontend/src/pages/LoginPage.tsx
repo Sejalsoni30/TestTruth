@@ -32,22 +32,24 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-6 selection:bg-indigo-500/30">
-      <div className="max-w-md w-full">
-        {/* Brand */}
+    <div className="min-h-screen app-bg flex items-center justify-center p-6 relative selection:bg-accent/30 selection:text-body">
+      <div className="fixed inset-0 spotlight-overlay z-0 pointer-events-none"></div>
+
+      <div className="max-w-md w-full relative z-10">
+        {/* Brand Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <ShieldCheck className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-full bg-gradient-to-b from-mauve-200 to-mauve-400 flex items-center justify-center shadow-elevation-md">
+              <ShieldCheck className="w-6 h-6 text-mauve-950" />
             </div>
-            <span className="font-bold text-2xl font-mono text-white tracking-tight">TestTruth</span>
+            <span className="font-bold text-2xl font-mono text-body tracking-tight">TestTruth</span>
           </Link>
-          <p className="text-sm text-slate-400">Sign in to audit and verify your test suites</p>
+          <p className="text-xs text-muted">Sign in to audit and verify your test suites</p>
         </div>
 
         <Card className="p-8">
           {error && (
-            <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center gap-3 text-red-400 text-xs">
+            <div className="mb-6 p-3 rounded-xl bg-critical/15 border border-critical/30 flex items-center gap-3 text-critical text-xs">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -55,35 +57,35 @@ export const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5 font-mono">
+              <label className="block text-xs font-semibold text-body mb-1.5 font-mono">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+                <Mail className="w-4 h-4 text-muted absolute left-3.5 top-3 pointer-events-none" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="engineer@company.com"
-                  className="w-full bg-[#0B0F19] border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-bg/80 border border-border rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-body placeholder-muted/60 focus:outline-none focus:border-accent transition-colors shadow-elevation-sm"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5 font-mono">
+              <label className="block text-xs font-semibold text-body mb-1.5 font-mono">
                 Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+                <Lock className="w-4 h-4 text-muted absolute left-3.5 top-3 pointer-events-none" />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#0B0F19] border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-bg/80 border border-border rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-body placeholder-muted/60 focus:outline-none focus:border-accent transition-colors shadow-elevation-sm"
                 />
               </div>
             </div>
@@ -91,7 +93,7 @@ export const LoginPage: React.FC = () => {
             <Button
               type="submit"
               variant="primary"
-              className="w-full"
+              className="w-full mt-2"
               isLoading={loading}
               rightIcon={<ArrowRight className="w-4 h-4" />}
             >
@@ -99,9 +101,9 @@ export const LoginPage: React.FC = () => {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-800 text-center text-xs text-slate-400">
+          <div className="mt-6 pt-6 border-t border-border text-center text-xs text-muted">
             Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-medium">
+            <Link to="/register" className="text-accent hover:text-body font-semibold">
               Create an account
             </Link>
           </div>
@@ -110,4 +112,3 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
-

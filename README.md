@@ -104,3 +104,4 @@ TestTruth challenges test suites, detects false confidence, and provides verifia
 
 ## 6. License
 MIT License. Built for engineering teams and researchers studying software test reliability.
+

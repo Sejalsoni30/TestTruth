@@ -58,8 +58,8 @@ export const DashboardPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-xs font-mono text-slate-400">Loading audit telemetry...</p>
+          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-xs font-mono text-muted">Loading audit telemetry...</p>
         </div>
       </div>
     );
@@ -78,17 +78,20 @@ export const DashboardPage: React.FC = () => {
     missingScenarios: 0,
   };
 
+  // Severity chart uses the semantic status hues from the palette specification:
+  // --critical: #C4566A, --high: #D9895B, --medium: #D4B26A, --low: #8FA58C, --info: #8B9BB4
   const severityData = [
-    { name: 'Critical', value: metrics?.severityCounts.critical || 0, color: '#EF4444' },
-    { name: 'High', value: metrics?.severityCounts.high || 0, color: '#F97316' },
-    { name: 'Medium', value: metrics?.severityCounts.medium || 0, color: '#FBBF24' },
-    { name: 'Low', value: metrics?.severityCounts.low || 0, color: '#38BDF8' },
-    { name: 'Info', value: metrics?.severityCounts.info || 0, color: '#94A3B8' },
+    { name: 'Critical', value: metrics?.severityCounts.critical || 0, color: '#C4566A' },
+    { name: 'High', value: metrics?.severityCounts.high || 0, color: '#D9895B' },
+    { name: 'Medium', value: metrics?.severityCounts.medium || 0, color: '#D4B26A' },
+    { name: 'Low', value: metrics?.severityCounts.low || 0, color: '#8FA58C' },
+    { name: 'Info', value: metrics?.severityCounts.info || 0, color: '#8B9BB4' },
   ];
 
+  // Mutation outcomes: killed = #8FA58C | survived = #C4566A
   const mutationOutcomeData = [
-    { name: 'Killed', value: m.killedMutants, color: '#10B981' },
-    { name: 'Survived', value: m.survivingMutations, color: '#F97316' },
+    { name: 'Killed', value: m.killedMutants, color: '#8FA58C' },
+    { name: 'Survived', value: m.survivingMutations, color: '#C4566A' },
   ];
 
   return (
@@ -96,8 +99,8 @@ export const DashboardPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Test Quality & Reliability Telemetry</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <h1 className="text-2xl font-bold text-body tracking-tight">Test Quality & Reliability Telemetry</h1>
+          <p className="text-xs text-muted mt-1">
             Empirical evidence across test suites. No blended vanity scores.
           </p>
         </div>
@@ -105,7 +108,7 @@ export const DashboardPage: React.FC = () => {
           <Button
             size="sm"
             variant="outline"
-            leftIcon={<HelpCircle className="w-3.5 h-3.5 text-slate-400" />}
+            leftIcon={<HelpCircle className="w-3.5 h-3.5 text-muted" />}
             onClick={() => setShowFormulaModal(true)}
           >
             Formula & Limits Disclosure
@@ -124,61 +127,64 @@ export const DashboardPage: React.FC = () => {
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-4">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-[11px] font-mono uppercase">Projects</span>
-            <FolderGit2 className="w-4 h-4 text-indigo-400" />
+          <div className="flex items-center justify-between text-muted mb-2">
+            <span className="text-[11px] font-mono uppercase font-semibold">Projects</span>
+            <FolderGit2 className="w-4 h-4 text-accent" />
           </div>
-          <div className="text-2xl font-bold text-white">{m.totalProjects}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Active workspaces</div>
+          <div className="text-2xl font-bold text-body">{m.totalProjects}</div>
+          <div className="text-[10px] text-muted mt-1">Active workspaces</div>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-[11px] font-mono uppercase">Tests Audited</span>
-            <Activity className="w-4 h-4 text-cyan-400" />
+          <div className="flex items-center justify-between text-muted mb-2">
+            <span className="text-[11px] font-mono uppercase font-semibold">Tests Audited</span>
+            <Activity className="w-4 h-4 text-accent" />
           </div>
-          <div className="text-2xl font-bold text-white">{m.testsAnalysed}</div>
-          <div className="text-[10px] text-emerald-400 mt-1">
+          <div className="text-2xl font-bold text-body">{m.testsAnalysed}</div>
+          <div className="text-[10px] text-low mt-1 font-medium">
             {m.passedExecution} pass / {m.failedExecution} fail
           </div>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-[11px] font-mono uppercase">Surviving Mutants</span>
-            <Dna className="w-4 h-4 text-orange-400" />
+          <div className="flex items-center justify-between text-muted mb-2">
+            <span className="text-[11px] font-mono uppercase font-semibold">Surviving Mutants</span>
+            <Dna className="w-4 h-4 text-critical" />
           </div>
-          <div className="text-2xl font-bold text-orange-400">{m.survivingMutations}</div>
-          <div className="text-[10px] text-slate-400 mt-1">{m.totalMutants} mutants injected</div>
+          <div className="text-2xl font-bold text-critical">{m.survivingMutations}</div>
+          <div className="text-[10px] text-muted mt-1">{m.totalMutants} mutants injected</div>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-[11px] font-mono uppercase">Kill Rate</span>
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center justify-between text-muted mb-2">
+            <span className="text-[11px] font-mono uppercase font-semibold">Kill Rate</span>
+            <TrendingUp className="w-4 h-4 text-low" />
           </div>
-          <div className="text-2xl font-bold text-emerald-400">{m.killRate}%</div>
-          <div className="text-[10px] text-slate-400 mt-1 cursor-pointer hover:underline" onClick={() => setShowFormulaModal(true)}>
+          <div className="text-2xl font-bold text-low">{m.killRate}%</div>
+          <div
+            className="text-[10px] text-muted mt-1 cursor-pointer hover:underline hover:text-body"
+            onClick={() => setShowFormulaModal(true)}
+          >
             View formula & limits
           </div>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-[11px] font-mono uppercase">Weak Assertions</span>
-            <ShieldAlert className="w-4 h-4 text-amber-400" />
+          <div className="flex items-center justify-between text-muted mb-2">
+            <span className="text-[11px] font-mono uppercase font-semibold">Weak Assertions</span>
+            <ShieldAlert className="w-4 h-4 text-medium" />
           </div>
-          <div className="text-2xl font-bold text-amber-400">{m.weakAssertions}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Run-only or truthy only</div>
+          <div className="text-2xl font-bold text-medium">{m.weakAssertions}</div>
+          <div className="text-[10px] text-muted mt-1">Run-only or truthy only</div>
         </Card>
 
         <Card className="p-4">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-[11px] font-mono uppercase">Missing Scenarios</span>
-            <Sparkles className="w-4 h-4 text-purple-400" />
+          <div className="flex items-center justify-between text-muted mb-2">
+            <span className="text-[11px] font-mono uppercase font-semibold">Missing Scenarios</span>
+            <Sparkles className="w-4 h-4 text-high" />
           </div>
-          <div className="text-2xl font-bold text-purple-400">{m.missingScenarios}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Unchecked branches/edges</div>
+          <div className="text-2xl font-bold text-high">{m.missingScenarios}</div>
+          <div className="text-[10px] text-muted mt-1">Unchecked branches/edges</div>
         </Card>
       </div>
 
@@ -188,20 +194,25 @@ export const DashboardPage: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-semibold text-white">Findings by Severity</h3>
-              <p className="text-[11px] text-slate-400">Classified by defect escape probability</p>
+              <h3 className="text-sm font-semibold text-body">Findings by Severity</h3>
+              <p className="text-[11px] text-muted">Classified by defect escape probability</p>
             </div>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={severityData}>
-                <XAxis dataKey="name" stroke="#64748B" fontSize={11} />
-                <YAxis stroke="#64748B" fontSize={11} allowDecimals={false} />
+                <XAxis dataKey="name" stroke="var(--mauve-400)" fontSize={11} />
+                <YAxis stroke="var(--mauve-400)" fontSize={11} allowDecimals={false} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#111827', borderColor: '#334155', borderRadius: '8px' }}
-                  itemStyle={{ color: '#F8FAFC', fontSize: '12px' }}
+                  contentStyle={{
+                    backgroundColor: 'var(--color-surface)',
+                    borderColor: 'var(--color-border)',
+                    borderRadius: '12px',
+                    color: 'var(--color-text)',
+                  }}
+                  itemStyle={{ fontSize: '12px' }}
                 />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                   {severityData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -215,14 +226,14 @@ export const DashboardPage: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-semibold text-white">Mutation Outcomes</h3>
-              <p className="text-[11px] text-slate-400">Sensitivity of tests to synthetic code modifications</p>
+              <h3 className="text-sm font-semibold text-body">Mutation Outcomes</h3>
+              <p className="text-[11px] text-muted">Sensitivity of tests to synthetic code modifications</p>
             </div>
-            <Badge variant={m.killRate >= 70 ? 'success' : 'survived'}>{m.killRate}% Killed</Badge>
+            <Badge variant={m.killRate >= 70 ? 'killed' : 'survived'}>{m.killRate}% Killed</Badge>
           </div>
           <div className="h-64 flex items-center justify-center">
             {m.totalMutants === 0 ? (
-              <div className="text-center text-xs text-slate-400 font-mono">
+              <div className="text-center text-xs text-muted font-mono">
                 No mutation tests executed yet.
                 <br />
                 Run an audit on a project to generate mutants.
@@ -244,8 +255,13 @@ export const DashboardPage: React.FC = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#111827', borderColor: '#334155', borderRadius: '8px' }}
-                    itemStyle={{ color: '#F8FAFC', fontSize: '12px' }}
+                    contentStyle={{
+                      backgroundColor: 'var(--color-surface)',
+                      borderColor: 'var(--color-border)',
+                      borderRadius: '12px',
+                      color: 'var(--color-text)',
+                    }}
+                    itemStyle={{ fontSize: '12px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -256,12 +272,12 @@ export const DashboardPage: React.FC = () => {
 
       {/* Recent Activity & Empty State */}
       <Card className="p-6">
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
           <div>
-            <h3 className="text-sm font-semibold text-white">Recent Audit Runs</h3>
-            <p className="text-[11px] text-slate-400">Execution history with reproducible timestamps</p>
+            <h3 className="text-sm font-semibold text-body">Recent Audit Runs</h3>
+            <p className="text-[11px] text-muted">Execution history with reproducible timestamps</p>
           </div>
-          <Link to="/projects" className="text-xs text-indigo-400 hover:text-indigo-300 font-medium inline-flex items-center gap-1">
+          <Link to="/projects" className="text-xs text-accent hover:text-body font-semibold inline-flex items-center gap-1">
             View All Projects <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -270,7 +286,7 @@ export const DashboardPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400 font-mono uppercase text-[10px]">
+                <tr className="border-b border-border text-muted font-mono uppercase text-[10px]">
                   <th className="pb-3">Project</th>
                   <th className="pb-3">Status</th>
                   <th className="pb-3">Tests</th>
@@ -280,33 +296,33 @@ export const DashboardPage: React.FC = () => {
                   <th className="pb-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono">
+              <tbody className="divide-y divide-border/60 font-mono">
                 {metrics.recentRuns.map((run) => (
-                  <tr key={run._id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="py-3 font-sans font-medium text-white">
+                  <tr key={run._id} className="hover:bg-surface-raised/40 transition-colors">
+                    <td className="py-3 font-sans font-medium text-body">
                       {(run.projectId as any)?.name || 'Project'}
                     </td>
                     <td className="py-3">
-                      <Badge variant={run.status === 'completed' ? 'success' : run.status === 'failed' ? 'mismatch' : 'indigo'}>
+                      <Badge variant={run.status === 'completed' ? 'killed' : run.status === 'failed' ? 'critical' : 'neutral'}>
                         {run.status}
                       </Badge>
                     </td>
-                    <td className="py-3 text-slate-300">
+                    <td className="py-3 text-muted">
                       {run.summaryMetrics?.totalTests || 0}
                     </td>
-                    <td className="py-3 text-emerald-400 font-bold">
+                    <td className="py-3 text-low font-bold">
                       {run.summaryMetrics?.mutationKillRate || 0}%
                     </td>
-                    <td className="py-3 text-amber-300">
+                    <td className="py-3 text-medium">
                       {run.summaryMetrics?.weakAssertionsCount || 0}
                     </td>
-                    <td className="py-3 text-slate-400 text-[11px]">
+                    <td className="py-3 text-muted text-[11px]">
                       {new Date(run.createdAt).toLocaleString()}
                     </td>
                     <td className="py-3 text-right font-sans">
                       <Link
                         to={`/reliability-analysis?runId=${run._id}`}
-                        className="text-xs text-indigo-400 hover:underline"
+                        className="text-xs text-accent hover:text-body font-medium hover:underline"
                       >
                         Inspect Findings
                       </Link>
@@ -318,9 +334,9 @@ export const DashboardPage: React.FC = () => {
           </div>
         ) : (
           <div className="py-12 text-center">
-            <Layers className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-            <h4 className="text-sm font-semibold text-slate-300">No audit runs recorded yet</h4>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-5">
+            <Layers className="w-10 h-10 text-muted/60 mx-auto mb-3" />
+            <h4 className="text-sm font-semibold text-body">No audit runs recorded yet</h4>
+            <p className="text-xs text-muted max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
               Upload a JavaScript or TypeScript codebase to execute AST reliability checks, isolated mutation testing, and AI scenario generation.
             </p>
             <Button size="sm" variant="primary" onClick={() => navigate('/projects')}>
@@ -338,31 +354,31 @@ export const DashboardPage: React.FC = () => {
         maxWidth="lg"
       >
         <div className="space-y-4 text-xs">
-          <div className="p-3 bg-indigo-950/20 border border-indigo-900/40 rounded-lg">
-            <div className="font-mono font-semibold text-indigo-300 mb-1">
+          <div className="p-3.5 bg-surface-raised/60 border border-border rounded-xl">
+            <div className="font-mono font-semibold text-body mb-1">
               Metric: {metrics?.formulaDocumentation.metric || 'Mutation Kill Rate (%)'}
             </div>
-            <div className="font-mono text-cyan-300 bg-[#0B0F19] p-2 rounded border border-slate-800">
+            <div className="font-mono text-accent bg-bg/80 p-2.5 rounded-lg border border-border">
               Formula: {metrics?.formulaDocumentation.formula || '(Killed Mutants / Total Mutants) * 100'}
             </div>
-            <p className="text-slate-300 mt-2 leading-relaxed">
+            <p className="text-muted mt-2 leading-relaxed">
               {metrics?.formulaDocumentation.description ||
                 'Measures the fraction of synthetically introduced code defects that caused at least one test to fail.'}
             </p>
           </div>
 
           <div>
-            <h5 className="font-semibold text-white mb-2 uppercase tracking-wider text-[11px]">
+            <h5 className="font-semibold text-body mb-2 uppercase tracking-wider text-[11px] font-mono">
               Non-Negotiable Limitations (Hard Truths):
             </h5>
-            <ul className="space-y-2 text-slate-300 list-disc pl-4 leading-relaxed">
+            <ul className="space-y-2 text-muted list-disc pl-4 leading-relaxed">
               {metrics?.formulaDocumentation.inherentLimitations.map((lim, idx) => (
                 <li key={idx}>{lim}</li>
               ))}
             </ul>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end">
+          <div className="pt-3 border-t border-border flex justify-end">
             <Button size="sm" variant="secondary" onClick={() => setShowFormulaModal(false)}>
               Understood
             </Button>
@@ -372,4 +388,3 @@ export const DashboardPage: React.FC = () => {
     </div>
   );
 };
-

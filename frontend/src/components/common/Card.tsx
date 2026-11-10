@@ -2,7 +2,7 @@ import React from 'react';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  variant?: 'default' | 'subtle' | 'interactive';
+  variant?: 'default' | 'subtle' | 'interactive' | 'glass';
   className?: string;
 }
 
@@ -12,12 +12,13 @@ export const Card: React.FC<CardProps> = ({
   className = '',
   ...props
 }) => {
-  const base = 'rounded-xl border transition-all duration-200';
+  const base = 'rounded-2xl border transition-all duration-200';
   const variants = {
-    default: 'bg-[#111827] border-slate-800 shadow-lg shadow-black/20',
-    subtle: 'bg-[#161F30]/60 border-slate-800/80 backdrop-blur-sm',
+    default: 'glass-card shadow-elevation-md',
+    subtle: 'bg-surface/50 border-border/80 backdrop-blur-md shadow-elevation-sm',
     interactive:
-      'bg-[#111827] border-slate-800 hover:border-slate-700 hover:shadow-xl hover:shadow-indigo-500/5 cursor-pointer',
+      'glass-card shadow-elevation-sm hover:shadow-elevation-md hover:border-accent/40 cursor-pointer',
+    glass: 'glass-card shadow-elevation-lg',
   };
 
   return (
@@ -26,4 +27,3 @@ export const Card: React.FC<CardProps> = ({
     </div>
   );
 };
-
