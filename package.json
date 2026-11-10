@@ -4,12 +4,15 @@
   "private": true,
   "description": "TestTruth — Test suite reliability auditing SaaS",
   "scripts": {
+    "dev": "concurrently -n \"backend,frontend\" -c \"magenta,cyan\" \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
     "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",
     "build": "npm run build:backend && npm run build:frontend",
     "test:phase2": "tsx backend/src/e2e_phase2_gate.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
   }
 }
-
