@@ -66,6 +66,7 @@ export function App() {
                 <Route path="/execution-details" element={<ExecutionDetailsPage />} />
                 <Route path="/ai-scenarios" element={<AIScenariosPage />} />
                 <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/reports/:runId" element={<ReportsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>
 

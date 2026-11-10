@@ -5,6 +5,7 @@ import { AnalysisRun } from '../models/AnalysisRun.js';
 import { Finding } from '../models/Finding.js';
 import { executeProjectAnalysis } from '../services/analysisPipelineService.js';
 import { MutationResult } from '../models/MutationResult.js';
+import { ExecutionResult } from '../models/ExecutionResult.js';
 
 export async function startAnalysisRun(req: AuthRequest, res: Response): Promise<void> {
   const { projectId, forceFullRun } = req.body;
@@ -198,12 +199,105 @@ export async function getRunDetails(req: AuthRequest, res: Response): Promise<vo
   }
 
   const findings = await Finding.find({ runId }).sort({ severity: 1 });
-  const mutations = await MutationResult.find({ runId }).limit(50);
+  const mutations = await MutationResult.find({ runId }).limit(100);
+  const execution = await ExecutionResult.findOne({ runId });
 
   res.status(200).json({
     run,
     findings,
     mutations,
+    execution,
   });
 }
+
+export async function deleteRun(req: AuthRequest, res: Response): Promise<void> {
+  const { runId } = req.params;
+  const userId = req.user!.userId;
+
+  if (!mongoose.Types.ObjectId.isValid(runId)) {
+    res.status(400).json({ error: 'Invalid run ID' });
+    return;
+  }
+
+  const run = await AnalysisRun.findOne({ _id: runId, userId });
+  if (!run) {
+    res.status(404).json({ error: 'Analysis run not found' });
+    return;
+  }
+
+  const projectId = run.projectId;
+
+  await Promise.all([
+    AnalysisRun.deleteOne({ _id: runId }),
+    Finding.deleteMany({ runId }),
+    MutationResult.deleteMany({ runId }),
+    ExecutionResult.deleteMany({ runId }),
+  ]);
+
+  // Update project stats to reflect remaining runs if any
+  const latestRun = await AnalysisRun.findOne({ projectId, status: 'completed' }).sort({ createdAt: -1 });
+  const project = await Project.findById(projectId);
+  if (project) {
+    if (latestRun) {
+      project.stats.lastRunAt = latestRun.createdAt;
+      project.stats.lastFindingsCount = latestRun.summaryMetrics.totalFindings;
+      project.stats.lastMutationKillRate = latestRun.summaryMetrics.mutationKillRate;
+    } else {
+      project.stats.lastRunAt = undefined;
+      project.stats.lastFindingsCount = 0;
+      project.stats.lastMutationKillRate = 0;
+    }
+    await project.save();
+  }
+
+  res.status(200).json({ message: 'Audit run and associated data deleted successfully' });
+}
+
+export async function exportRunJson(req: AuthRequest, res: Response): Promise<void> {
+  const { runId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(runId)) {
+    res.status(400).json({ error: 'Invalid run ID' });
+    return;
+  }
+
+  const run = await AnalysisRun.findById(runId).populate('projectId', 'name framework language description');
+  if (!run) {
+    res.status(404).json({ error: 'Analysis run not found' });
+    return;
+  }
+
+  const findings = await Finding.find({ runId }).sort({ severity: 1 });
+  const mutations = await MutationResult.find({ runId });
+  const execution = await ExecutionResult.findOne({ runId });
+
+  const reportPayload = {
+    reportType: 'TestTruth Defensible Reliability Audit',
+    version: '2.0.0',
+    generatedAt: new Date().toISOString(),
+    honestyPrinciples: run.honestyDisclosures,
+    project: run.projectId,
+    run: {
+      id: run._id,
+      status: run.status,
+      runMode: run.runModeLabel,
+      isIncremental: run.isIncremental,
+      changedFilesCount: run.changedFilesCount,
+      reusedMutantsCount: run.reusedMutantsCount,
+      startedAt: run.startedAt,
+      completedAt: run.completedAt,
+      summaryMetrics: run.summaryMetrics,
+      executionSandbox: run.executionSandbox,
+      dockerAvailable: run.dockerAvailable,
+    },
+    baselineExecution: execution,
+    findings,
+    mutations,
+  };
+
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', `attachment; filename="testtruth-report-${runId}.json"`);
+  res.status(200).send(JSON.stringify(reportPayload, null, 2));
+}
+
 
