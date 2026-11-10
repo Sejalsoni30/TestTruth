@@ -1,0 +1,375 @@
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  FolderGit2,
+  CheckCircle2,
+  XCircle,
+  Dna,
+  ShieldAlert,
+  Sparkles,
+  HelpCircle,
+  Plus,
+  ArrowRight,
+  TrendingUp,
+  Activity,
+  Layers,
+} from 'lucide-react';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
+import { runService } from '../services/runService.js';
+import { DashboardMetrics } from '../types/index.js';
+import { Card } from '../components/common/Card.js';
+import { Button } from '../components/common/Button.js';
+import { Badge } from '../components/common/Badge.js';
+import { Modal } from '../components/common/Modal.js';
+import { useProject } from '../context/ProjectContext.js';
+
+export const DashboardPage: React.FC = () => {
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showFormulaModal, setShowFormulaModal] = useState(false);
+  const { projects } = useProject();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchMetrics() {
+      try {
+        const data = await runService.getDashboardMetrics();
+        setMetrics(data);
+      } catch (err) {
+        console.error('Failed to load dashboard metrics:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMetrics();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-xs font-mono text-slate-400">Loading audit telemetry...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const m = metrics?.metrics || {
+    totalProjects: projects.length,
+    testsAnalysed: 0,
+    passedExecution: 0,
+    failedExecution: 0,
+    survivingMutations: 0,
+    killedMutants: 0,
+    totalMutants: 0,
+    killRate: 0,
+    weakAssertions: 0,
+    missingScenarios: 0,
+  };
+
+  const severityData = [
+    { name: 'Critical', value: metrics?.severityCounts.critical || 0, color: '#EF4444' },
+    { name: 'High', value: metrics?.severityCounts.high || 0, color: '#F97316' },
+    { name: 'Medium', value: metrics?.severityCounts.medium || 0, color: '#FBBF24' },
+    { name: 'Low', value: metrics?.severityCounts.low || 0, color: '#38BDF8' },
+    { name: 'Info', value: metrics?.severityCounts.info || 0, color: '#94A3B8' },
+  ];
+
+  const mutationOutcomeData = [
+    { name: 'Killed', value: m.killedMutants, color: '#10B981' },
+    { name: 'Survived', value: m.survivingMutations, color: '#F97316' },
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Test Quality & Reliability Telemetry</h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Empirical evidence across test suites. No blended vanity scores.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button
+            size="sm"
+            variant="outline"
+            leftIcon={<HelpCircle className="w-3.5 h-3.5 text-slate-400" />}
+            onClick={() => setShowFormulaModal(true)}
+          >
+            Formula & Limits Disclosure
+          </Button>
+          <Button
+            size="sm"
+            variant="primary"
+            leftIcon={<Plus className="w-4 h-4" />}
+            onClick={() => navigate('/projects')}
+          >
+            New Project
+          </Button>
+        </div>
+      </div>
+
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <Card className="p-4">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-mono uppercase">Projects</span>
+            <FolderGit2 className="w-4 h-4 text-indigo-400" />
+          </div>
+          <div className="text-2xl font-bold text-white">{m.totalProjects}</div>
+          <div className="text-[10px] text-slate-400 mt-1">Active workspaces</div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-mono uppercase">Tests Audited</span>
+            <Activity className="w-4 h-4 text-cyan-400" />
+          </div>
+          <div className="text-2xl font-bold text-white">{m.testsAnalysed}</div>
+          <div className="text-[10px] text-emerald-400 mt-1">
+            {m.passedExecution} pass / {m.failedExecution} fail
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-mono uppercase">Surviving Mutants</span>
+            <Dna className="w-4 h-4 text-orange-400" />
+          </div>
+          <div className="text-2xl font-bold text-orange-400">{m.survivingMutations}</div>
+          <div className="text-[10px] text-slate-400 mt-1">{m.totalMutants} mutants injected</div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-mono uppercase">Kill Rate</span>
+            <TrendingUp className="w-4 h-4 text-emerald-400" />
+          </div>
+          <div className="text-2xl font-bold text-emerald-400">{m.killRate}%</div>
+          <div className="text-[10px] text-slate-400 mt-1 cursor-pointer hover:underline" onClick={() => setShowFormulaModal(true)}>
+            View formula & limits
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-mono uppercase">Weak Assertions</span>
+            <ShieldAlert className="w-4 h-4 text-amber-400" />
+          </div>
+          <div className="text-2xl font-bold text-amber-400">{m.weakAssertions}</div>
+          <div className="text-[10px] text-slate-400 mt-1">Run-only or truthy only</div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-mono uppercase">Missing Scenarios</span>
+            <Sparkles className="w-4 h-4 text-purple-400" />
+          </div>
+          <div className="text-2xl font-bold text-purple-400">{m.missingScenarios}</div>
+          <div className="text-[10px] text-slate-400 mt-1">Unchecked branches/edges</div>
+        </Card>
+      </div>
+
+      {/* Main Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Severity Distribution */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-white">Findings by Severity</h3>
+              <p className="text-[11px] text-slate-400">Classified by defect escape probability</p>
+            </div>
+          </div>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={severityData}>
+                <XAxis dataKey="name" stroke="#64748B" fontSize={11} />
+                <YAxis stroke="#64748B" fontSize={11} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#111827', borderColor: '#334155', borderRadius: '8px' }}
+                  itemStyle={{ color: '#F8FAFC', fontSize: '12px' }}
+                />
+                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                  {severityData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        {/* Mutation Kill vs Survived */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-white">Mutation Outcomes</h3>
+              <p className="text-[11px] text-slate-400">Sensitivity of tests to synthetic code modifications</p>
+            </div>
+            <Badge variant={m.killRate >= 70 ? 'success' : 'survived'}>{m.killRate}% Killed</Badge>
+          </div>
+          <div className="h-64 flex items-center justify-center">
+            {m.totalMutants === 0 ? (
+              <div className="text-center text-xs text-slate-400 font-mono">
+                No mutation tests executed yet.
+                <br />
+                Run an audit on a project to generate mutants.
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={mutationOutcomeData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={55}
+                    outerRadius={85}
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {mutationOutcomeData.map((entry, index) => (
+                      <Cell key={`mut-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#111827', borderColor: '#334155', borderRadius: '8px' }}
+                    itemStyle={{ color: '#F8FAFC', fontSize: '12px' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      {/* Recent Activity & Empty State */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+          <div>
+            <h3 className="text-sm font-semibold text-white">Recent Audit Runs</h3>
+            <p className="text-[11px] text-slate-400">Execution history with reproducible timestamps</p>
+          </div>
+          <Link to="/projects" className="text-xs text-indigo-400 hover:text-indigo-300 font-medium inline-flex items-center gap-1">
+            View All Projects <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {metrics?.recentRuns && metrics.recentRuns.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-800 text-slate-400 font-mono uppercase text-[10px]">
+                  <th className="pb-3">Project</th>
+                  <th className="pb-3">Status</th>
+                  <th className="pb-3">Tests</th>
+                  <th className="pb-3">Mutation Kill Rate</th>
+                  <th className="pb-3">Weak Assertions</th>
+                  <th className="pb-3">Executed At</th>
+                  <th className="pb-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/60 font-mono">
+                {metrics.recentRuns.map((run) => (
+                  <tr key={run._id} className="hover:bg-slate-800/30 transition-colors">
+                    <td className="py-3 font-sans font-medium text-white">
+                      {(run.projectId as any)?.name || 'Project'}
+                    </td>
+                    <td className="py-3">
+                      <Badge variant={run.status === 'completed' ? 'success' : run.status === 'failed' ? 'mismatch' : 'indigo'}>
+                        {run.status}
+                      </Badge>
+                    </td>
+                    <td className="py-3 text-slate-300">
+                      {run.summaryMetrics?.totalTests || 0}
+                    </td>
+                    <td className="py-3 text-emerald-400 font-bold">
+                      {run.summaryMetrics?.mutationKillRate || 0}%
+                    </td>
+                    <td className="py-3 text-amber-300">
+                      {run.summaryMetrics?.weakAssertionsCount || 0}
+                    </td>
+                    <td className="py-3 text-slate-400 text-[11px]">
+                      {new Date(run.createdAt).toLocaleString()}
+                    </td>
+                    <td className="py-3 text-right font-sans">
+                      <Link
+                        to={`/reliability-analysis?runId=${run._id}`}
+                        className="text-xs text-indigo-400 hover:underline"
+                      >
+                        Inspect Findings
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="py-12 text-center">
+            <Layers className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+            <h4 className="text-sm font-semibold text-slate-300">No audit runs recorded yet</h4>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-5">
+              Upload a JavaScript or TypeScript codebase to execute AST reliability checks, isolated mutation testing, and AI scenario generation.
+            </p>
+            <Button size="sm" variant="primary" onClick={() => navigate('/projects')}>
+              Create Your First Project
+            </Button>
+          </div>
+        )}
+      </Card>
+
+      {/* Formula & Limits Disclosure Modal */}
+      <Modal
+        isOpen={showFormulaModal}
+        onClose={() => setShowFormulaModal(false)}
+        title="Formula & Inherent Limitations Disclosure"
+        maxWidth="lg"
+      >
+        <div className="space-y-4 text-xs">
+          <div className="p-3 bg-indigo-950/20 border border-indigo-900/40 rounded-lg">
+            <div className="font-mono font-semibold text-indigo-300 mb-1">
+              Metric: {metrics?.formulaDocumentation.metric || 'Mutation Kill Rate (%)'}
+            </div>
+            <div className="font-mono text-cyan-300 bg-[#0B0F19] p-2 rounded border border-slate-800">
+              Formula: {metrics?.formulaDocumentation.formula || '(Killed Mutants / Total Mutants) * 100'}
+            </div>
+            <p className="text-slate-300 mt-2 leading-relaxed">
+              {metrics?.formulaDocumentation.description ||
+                'Measures the fraction of synthetically introduced code defects that caused at least one test to fail.'}
+            </p>
+          </div>
+
+          <div>
+            <h5 className="font-semibold text-white mb-2 uppercase tracking-wider text-[11px]">
+              Non-Negotiable Limitations (Hard Truths):
+            </h5>
+            <ul className="space-y-2 text-slate-300 list-disc pl-4 leading-relaxed">
+              {metrics?.formulaDocumentation.inherentLimitations.map((lim, idx) => (
+                <li key={idx}>{lim}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="pt-3 border-t border-slate-800 flex justify-end">
+            <Button size="sm" variant="secondary" onClick={() => setShowFormulaModal(false)}>
+              Understood
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+

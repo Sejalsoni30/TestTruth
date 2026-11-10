@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Builds
+dist/
+build/
+*.egg-info/
+*.tsbuildinfo
+
+# Uploads and temporary sandboxes
+uploads/
+sandboxes/
+temp/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
