@@ -100,3 +100,4 @@ export const SecurityPage: React.FC = () => {
     </div>
   );
 };
+

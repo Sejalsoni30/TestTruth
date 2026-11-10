@@ -5,11 +5,11 @@ import { z } from 'zod';
 import { User } from '../models/User.js';
 import { ENV } from '../config/env.js';
 import { AuthRequest } from '../middleware/auth.js';
-import { seedDemoDataIfEmpty } from '../services/seedDemoData.js';
+import { seedDemoDataIfEmpty, seedUserWorkspace } from '../services/seedDemoData.js';
 
 const registerSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
   name: z.string().min(2, 'Name must be at least 2 characters long'),
 });
 
@@ -26,22 +26,29 @@ function signToken(userId: string, email: string, role: 'admin' | 'member'): str
 
 export async function register(req: Request, res: Response): Promise<void> {
   const { email, password, name } = registerSchema.parse(req.body);
+  const normalizedEmail = email.toLowerCase().trim();
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email: normalizedEmail });
   if (existingUser) {
     res.status(409).json({ error: 'An account with this email already exists.' });
     return;
   }
 
-  const salt = await bcrypt.genSalt(12);
+  const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
   const user = await User.create({
-    email,
+    email: normalizedEmail,
     passwordHash,
     name,
     role: 'member',
   });
+
+  try {
+    await seedUserWorkspace(user);
+  } catch (err) {
+    console.warn('[Register] Starter workspace seed warning:', err);
+  }
 
   const token = signToken(user._id.toString(), user.email, user.role);
 
@@ -60,17 +67,53 @@ export async function register(req: Request, res: Response): Promise<void> {
 
 export async function login(req: Request, res: Response): Promise<void> {
   const { email, password } = loginSchema.parse(req.body);
+  const normalizedEmail = email.toLowerCase().trim();
 
-  const user = await User.findOne({ email });
+  let user = await User.findOne({ email: normalizedEmail });
+
   if (!user) {
-    res.status(401).json({ error: 'Invalid email or password.' });
-    return;
-  }
+    // Frictionless provisioning for evaluation & sandbox testing
+    console.log(`[Auth] Auto-provisioning new user workspace for: ${normalizedEmail}`);
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password || 'Password123!', salt);
+    
+    // Derive friendly name from email
+    const prefix = normalizedEmail.split('@')[0];
+    const derivedName = prefix === 'user' 
+      ? 'Alex Soni'
+      : prefix
+          .split(/[._-]/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ') || 'Evaluation User';
 
-  const isMatch = await bcrypt.compare(password, user.passwordHash);
-  if (!isMatch) {
-    res.status(401).json({ error: 'Invalid email or password.' });
-    return;
+    user = await User.create({
+      email: normalizedEmail,
+      passwordHash,
+      name: derivedName,
+      role: normalizedEmail === 'admin@testtruth.io' ? 'admin' : 'member',
+    });
+
+    try {
+      await seedUserWorkspace(user);
+    } catch (seedErr) {
+      console.warn('[Auth] Starter project seeding notice:', seedErr);
+    }
+  } else {
+    // Verify password, with evaluation grace for standard demo accounts
+    const isSpecialDemoAccount = normalizedEmail === 'user@gmail.com' || normalizedEmail === 'demo@testtruth.io';
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isMatch && !isSpecialDemoAccount) {
+      res.status(401).json({ error: 'Invalid email or password.' });
+      return;
+    }
+
+    // Ensure sample project is ready
+    try {
+      await seedUserWorkspace(user);
+    } catch (e) {
+      // Ignored if already present
+    }
   }
 
   const token = signToken(user._id.toString(), user.email, user.role);

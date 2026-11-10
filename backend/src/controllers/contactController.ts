@@ -52,3 +52,4 @@ export async function submitContactMessage(req: Request, res: Response): Promise
     messageId: msg._id,
   });
 }
+

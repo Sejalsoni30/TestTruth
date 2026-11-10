@@ -194,3 +194,4 @@ export const DocsPage: React.FC = () => {
     </div>
   );
 };
+

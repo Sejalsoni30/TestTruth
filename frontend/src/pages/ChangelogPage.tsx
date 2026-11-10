@@ -113,3 +113,4 @@ export const ChangelogPage: React.FC = () => {
     </div>
   );
 };
+
