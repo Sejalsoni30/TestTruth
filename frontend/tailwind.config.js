@@ -4,57 +4,51 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Complete Mauve Scale from CSS variables
-        mauve: {
-          50: 'var(--mauve-50)',
-          100: 'var(--mauve-100)',
-          200: 'var(--mauve-200)',
-          300: 'var(--mauve-300)',
-          400: 'var(--mauve-400)',
-          500: 'var(--mauve-500)',
-          600: 'var(--mauve-600)',
-          700: 'var(--mauve-700)',
-          800: 'var(--mauve-800)',
-          900: 'var(--mauve-900)',
-          950: 'var(--mauve-950)',
-        },
+        // Page & Surface tokens
+        bg: 'var(--bg)',
+        surface: 'var(--surface)',
+        'surface-soft': 'var(--surface-soft)',
+        border: 'var(--border)',
+        'border-secondary': 'var(--border-secondary)',
+        body: 'var(--text)',
+        muted: 'var(--text-muted)',
 
-        // Theme Token Mappings
-        bg: 'var(--color-bg)',
-        surface: 'var(--color-surface)',
-        'surface-raised': 'var(--color-surface-raised)',
-        border: 'var(--color-border)',
-        body: 'var(--color-text)',
-        muted: 'var(--color-text-muted)',
-        faint: 'var(--color-text-faint)',
-        accent: 'var(--color-accent)',
-        'accent-hover': 'var(--color-accent-hover)',
-        'accent-text': 'var(--color-accent-text)',
+        // Dark Mauve Dedicated Components (Sidebar, Hero, Code)
+        'sidebar-bg': 'var(--sidebar-bg)',
+        'sidebar-text': 'var(--sidebar-text)',
+        'sidebar-muted': 'var(--sidebar-muted)',
+        'sidebar-active': 'var(--sidebar-active)',
+        'code-bg': 'var(--code-bg)',
+        'code-text': 'var(--code-text)',
 
-        // Semantic Status Colours
-        critical: 'var(--color-critical)',
-        high: 'var(--color-high)',
-        medium: 'var(--color-medium)',
-        low: 'var(--color-low)',
-        info: 'var(--color-info)',
+        // Accent that pops
+        accent: 'var(--accent)',
+        'accent-hover': 'var(--accent-hover)',
+        'accent-text': 'var(--accent-text)',
+
+        // Semantic Status Colors
+        critical: 'var(--critical)',
+        high: 'var(--high)',
+        medium: 'var(--medium)',
+        low: 'var(--low)',
+        info: 'var(--info)',
 
         // Mutation Semantics
-        'mutation-killed': 'var(--color-mutation-killed)',
-        'mutation-survived': 'var(--color-mutation-survived)',
-        'mutation-timeout': 'var(--color-mutation-timeout)',
-        'mutation-no-coverage': 'var(--color-mutation-no-coverage)',
+        'mutation-killed': 'var(--mutation-killed)',
+        'mutation-survived': 'var(--mutation-survived)',
+        'mutation-timeout': 'var(--mutation-timeout)',
+        'mutation-no-coverage': 'var(--mutation-no-coverage)',
       },
       borderRadius: {
         '2xl': '1rem',
       },
       boxShadow: {
-        'elevation-sm': 'var(--shadow-elevation-sm)',
-        'elevation-md': 'var(--shadow-elevation-md)',
-        'elevation-lg': 'var(--shadow-elevation-lg)',
+        card: 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        modal: 'var(--shadow-modal)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

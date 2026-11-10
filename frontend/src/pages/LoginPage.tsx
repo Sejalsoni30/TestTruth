@@ -32,15 +32,13 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen app-bg flex items-center justify-center p-6 relative selection:bg-accent/30 selection:text-body">
-      <div className="fixed inset-0 spotlight-overlay z-0 pointer-events-none"></div>
-
-      <div className="max-w-md w-full relative z-10">
+    <div className="min-h-screen bg-bg flex items-center justify-center p-6 selection:bg-accent/20 selection:text-body">
+      <div className="max-w-md w-full">
         {/* Brand Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-b from-mauve-200 to-mauve-400 flex items-center justify-center shadow-elevation-md">
-              <ShieldCheck className="w-6 h-6 text-mauve-950" />
+            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-md">
+              <ShieldCheck className="w-6 h-6 text-accent-text" />
             </div>
             <span className="font-bold text-2xl font-mono text-body tracking-tight">TestTruth</span>
           </Link>
@@ -49,7 +47,7 @@ export const LoginPage: React.FC = () => {
 
         <Card className="p-8">
           {error && (
-            <div className="mb-6 p-3 rounded-xl bg-critical/15 border border-critical/30 flex items-center gap-3 text-critical text-xs">
+            <div className="mb-6 p-3 rounded-xl bg-critical/10 border border-critical/25 flex items-center gap-3 text-critical text-xs">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -68,7 +66,7 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="engineer@company.com"
-                  className="w-full bg-bg/80 border border-border rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-body placeholder-muted/60 focus:outline-none focus:border-accent transition-colors shadow-elevation-sm"
+                  className="w-full bg-surface-soft border border-border rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-body placeholder-muted focus:outline-none focus:border-accent transition-colors shadow-sm"
                 />
               </div>
             </div>
@@ -85,7 +83,7 @@ export const LoginPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-bg/80 border border-border rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-body placeholder-muted/60 focus:outline-none focus:border-accent transition-colors shadow-elevation-sm"
+                  className="w-full bg-surface-soft border border-border rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-body placeholder-muted focus:outline-none focus:border-accent transition-colors shadow-sm"
                 />
               </div>
             </div>
@@ -103,7 +101,7 @@ export const LoginPage: React.FC = () => {
 
           <div className="mt-6 pt-6 border-t border-border text-center text-xs text-muted">
             Don't have an account?{' '}
-            <Link to="/register" className="text-accent hover:text-body font-semibold">
+            <Link to="/register" className="text-accent hover:text-accent-hover font-semibold">
               Create an account
             </Link>
           </div>

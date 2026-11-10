@@ -78,20 +78,19 @@ export const DashboardPage: React.FC = () => {
     missingScenarios: 0,
   };
 
-  // Severity chart uses the semantic status hues from the palette specification:
-  // --critical: #C4566A, --high: #D9895B, --medium: #D4B26A, --low: #8FA58C, --info: #8B9BB4
+  // Severity Distribution: critical #B3261E | high #C75B12 | medium #B8860B | low #4F7A5C | info #3F6C9E
   const severityData = [
-    { name: 'Critical', value: metrics?.severityCounts.critical || 0, color: '#C4566A' },
-    { name: 'High', value: metrics?.severityCounts.high || 0, color: '#D9895B' },
-    { name: 'Medium', value: metrics?.severityCounts.medium || 0, color: '#D4B26A' },
-    { name: 'Low', value: metrics?.severityCounts.low || 0, color: '#8FA58C' },
-    { name: 'Info', value: metrics?.severityCounts.info || 0, color: '#8B9BB4' },
+    { name: 'Critical', value: metrics?.severityCounts.critical || 0, color: '#B3261E' },
+    { name: 'High', value: metrics?.severityCounts.high || 0, color: '#C75B12' },
+    { name: 'Medium', value: metrics?.severityCounts.medium || 0, color: '#B8860B' },
+    { name: 'Low', value: metrics?.severityCounts.low || 0, color: '#4F7A5C' },
+    { name: 'Info', value: metrics?.severityCounts.info || 0, color: '#3F6C9E' },
   ];
 
-  // Mutation outcomes: killed = #8FA58C | survived = #C4566A
+  // Mutation outcomes: killed #4F7A5C | survived #B3261E
   const mutationOutcomeData = [
-    { name: 'Killed', value: m.killedMutants, color: '#8FA58C' },
-    { name: 'Survived', value: m.survivingMutations, color: '#C4566A' },
+    { name: 'Killed', value: m.killedMutants, color: '#4F7A5C' },
+    { name: 'Survived', value: m.survivingMutations, color: '#B3261E' },
   ];
 
   return (
@@ -124,7 +123,7 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
+      {/* KPI Cards Grid (White cards, 1px #E6D2C4 border, shadow-card) */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-4">
           <div className="flex items-center justify-between text-muted mb-2">
@@ -132,7 +131,7 @@ export const DashboardPage: React.FC = () => {
             <FolderGit2 className="w-4 h-4 text-accent" />
           </div>
           <div className="text-2xl font-bold text-body">{m.totalProjects}</div>
-          <div className="text-[10px] text-muted mt-1">Active workspaces</div>
+          <div className="text-[10px] text-muted mt-1 font-medium">Active workspaces</div>
         </Card>
 
         <Card className="p-4">
@@ -201,14 +200,15 @@ export const DashboardPage: React.FC = () => {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={severityData}>
-                <XAxis dataKey="name" stroke="var(--mauve-400)" fontSize={11} />
-                <YAxis stroke="var(--mauve-400)" fontSize={11} allowDecimals={false} />
+                <XAxis dataKey="name" stroke="#6B5560" fontSize={11} />
+                <YAxis stroke="#6B5560" fontSize={11} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'var(--color-surface)',
-                    borderColor: 'var(--color-border)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E6D2C4',
                     borderRadius: '12px',
-                    color: 'var(--color-text)',
+                    color: '#3E3239',
+                    boxShadow: '0 4px 12px rgba(62,50,57,0.1)',
                   }}
                   itemStyle={{ fontSize: '12px' }}
                 />
@@ -256,10 +256,11 @@ export const DashboardPage: React.FC = () => {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'var(--color-surface)',
-                      borderColor: 'var(--color-border)',
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#E6D2C4',
                       borderRadius: '12px',
-                      color: 'var(--color-text)',
+                      color: '#3E3239',
+                      boxShadow: '0 4px 12px rgba(62,50,57,0.1)',
                     }}
                     itemStyle={{ fontSize: '12px' }}
                   />
@@ -270,14 +271,14 @@ export const DashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Recent Activity & Empty State */}
+      {/* Recent Activity */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
           <div>
             <h3 className="text-sm font-semibold text-body">Recent Audit Runs</h3>
             <p className="text-[11px] text-muted">Execution history with reproducible timestamps</p>
           </div>
-          <Link to="/projects" className="text-xs text-accent hover:text-body font-semibold inline-flex items-center gap-1">
+          <Link to="/projects" className="text-xs text-accent hover:text-accent-hover font-semibold inline-flex items-center gap-1">
             View All Projects <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -298,7 +299,7 @@ export const DashboardPage: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-border/60 font-mono">
                 {metrics.recentRuns.map((run) => (
-                  <tr key={run._id} className="hover:bg-surface-raised/40 transition-colors">
+                  <tr key={run._id} className="hover:bg-surface-soft/60 transition-colors">
                     <td className="py-3 font-sans font-medium text-body">
                       {(run.projectId as any)?.name || 'Project'}
                     </td>
@@ -322,7 +323,7 @@ export const DashboardPage: React.FC = () => {
                     <td className="py-3 text-right font-sans">
                       <Link
                         to={`/reliability-analysis?runId=${run._id}`}
-                        className="text-xs text-accent hover:text-body font-medium hover:underline"
+                        className="text-xs text-accent hover:text-accent-hover font-medium hover:underline"
                       >
                         Inspect Findings
                       </Link>
@@ -354,11 +355,11 @@ export const DashboardPage: React.FC = () => {
         maxWidth="lg"
       >
         <div className="space-y-4 text-xs">
-          <div className="p-3.5 bg-surface-raised/60 border border-border rounded-xl">
+          <div className="p-3.5 bg-surface-soft border border-border rounded-xl">
             <div className="font-mono font-semibold text-body mb-1">
               Metric: {metrics?.formulaDocumentation.metric || 'Mutation Kill Rate (%)'}
             </div>
-            <div className="font-mono text-accent bg-bg/80 p-2.5 rounded-lg border border-border">
+            <div className="font-mono text-accent bg-surface p-2.5 rounded-lg border border-border">
               Formula: {metrics?.formulaDocumentation.formula || '(Killed Mutants / Total Mutants) * 100'}
             </div>
             <p className="text-muted mt-2 leading-relaxed">

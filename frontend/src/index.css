@@ -3,145 +3,127 @@
 @tailwind utilities;
 
 :root {
-  /* Brand Scale (Mauve & Cream) */
-  --mauve-50:  #F7EFE7;
-  --mauve-100: #EFE1D6;
-  --mauve-200: #E6D2C4;
-  --mauve-300: #D6BCB3;
-  --mauve-400: #C7A9A2;
-  --mauve-500: #9E8189;
-  --mauve-600: #856A73;
-  --mauve-700: #6B5560;
-  --mauve-800: #4F3F48;
-  --mauve-900: #3E3239;
-  --mauve-950: #2A2127;
+  /* Default Theme: LIGHT (Cream background, white cards, dark mauve text) */
+  --bg:            #F7EFE7;
+  --surface:       #FFFFFF;
+  --surface-soft:  #EFE1D6;
+  --border:        #E6D2C4;
+  --border-secondary: #C7A9A2;
+  --text:          #3E3239;
+  --text-muted:    #6B5560;
 
-  /* Dark Theme (Default) Token Mapping */
-  --color-bg: #2A2127;
-  --color-surface: #3E3239;
-  --color-surface-raised: #4F3F48;
-  --color-border: rgba(247, 239, 231, 0.12);
-  --color-text: #F7EFE7;
-  --color-text-muted: #C7A9A2;
-  --color-text-faint: #9E8189;
-  --color-accent: #C7A9A2;
-  --color-accent-hover: #E6D2C4;
-  --color-accent-text: #2A2127;
+  /* Dark Mauve Components (Sidebar, Hero, Code Blocks) */
+  --sidebar-bg:    #3E3239;
+  --sidebar-text:  #F7EFE7;
+  --sidebar-muted: #D6BCB3;
+  --sidebar-active: #6B5560;
+  --code-bg:       #2A2127;
+  --code-text:     #F7EFE7;
 
-  /* Semantic Colours */
-  --color-critical: #C4566A;
-  --color-high: #D9895B;
-  --color-medium: #D4B26A;
-  --color-low: #8FA58C;
-  --color-info: #8B9BB4;
+  /* Accent Color that Pops */
+  --accent:        #A8456B;
+  --accent-hover:  #8E3558;
+  --accent-text:   #FFFFFF;
+
+  /* Semantic Status Colors (Always with Icon + Label) */
+  --critical:      #B3261E;
+  --high:          #C75B12;
+  --medium:        #B8860B;
+  --low:           #4F7A5C;
+  --info:          #3F6C9E;
 
   /* Mutation Semantics */
-  --color-mutation-killed: #8FA58C;
-  --color-mutation-survived: #C4566A;
-  --color-mutation-timeout: #D4B26A;
-  --color-mutation-no-coverage: #9E8189;
+  --mutation-killed:      #4F7A5C;
+  --mutation-survived:    #B3261E;
+  --mutation-timeout:     #B8860B;
+  --mutation-no-coverage: #9E8189;
 
-  /* Shadows & Elevation */
-  --shadow-elevation-sm: 0 2px 8px rgba(20, 14, 18, 0.35);
-  --shadow-elevation-md: 0 8px 24px rgba(20, 14, 18, 0.45);
-  --shadow-elevation-lg: 0 20px 48px rgba(20, 14, 18, 0.55);
-}
-
-.light {
-  /* Light Theme Token Mapping */
-  --color-bg: #F7EFE7;
-  --color-surface: rgba(255, 255, 255, 0.70);
-  --color-surface-raised: #EFE1D6;
-  --color-border: rgba(62, 50, 57, 0.14);
-  --color-text: #3E3239;
-  --color-text-muted: #6B5560;
-  --color-text-faint: #9E8189;
-  --color-accent: #6B5560;
-  --color-accent-hover: #4F3F48;
-  --color-accent-text: #F7EFE7;
-
-  --shadow-elevation-sm: 0 2px 8px rgba(62, 50, 57, 0.08);
-  --shadow-elevation-md: 0 8px 24px rgba(62, 50, 57, 0.12);
-  --shadow-elevation-lg: 0 20px 48px rgba(62, 50, 57, 0.18);
+  /* Elevation & Depth */
+  --shadow-card:       0 1px 2px rgba(62, 50, 57, 0.06), 0 8px 24px rgba(62, 50, 57, 0.08);
+  --shadow-card-hover: 0 4px 12px rgba(62, 50, 57, 0.08), 0 16px 32px rgba(62, 50, 57, 0.12);
+  --shadow-modal:      0 20px 48px rgba(62, 50, 57, 0.20);
 }
 
 @layer base {
   body {
-    background-color: var(--color-bg);
-    color: var(--color-text);
+    background-color: var(--bg);
+    color: var(--text);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Custom scrollbar in warm mauve */
+  /* Custom scrollbar in warm cream and mauve */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--color-bg);
+    background: var(--bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--mauve-800);
+    background: var(--border-secondary);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--mauve-700);
+    background: var(--text-muted);
   }
 }
 
-/* Page background with warm diagonal gradient & corner spotlight */
-.app-bg {
-  background: linear-gradient(160deg, #2A2127 0%, #3E3239 100%);
-  min-height: 100vh;
+/* Dedicated Hero styling: gradient #3E3239 to #6B5560 with soft glow top-left */
+.hero-gradient {
+  background: linear-gradient(135deg, #3E3239 0%, #6B5560 100%);
   position: relative;
+  overflow: hidden;
 }
 
-.light .app-bg {
-  background: linear-gradient(160deg, #F7EFE7 0%, #EFE1D6 100%);
-}
-
-.spotlight-overlay {
-  background: radial-gradient(circle at 15% 0%, rgba(230, 210, 196, 0.18), transparent 45%);
+.hero-glow {
+  background: radial-gradient(circle at 15% 0%, rgba(230, 210, 196, 0.25), transparent 50%);
   pointer-events: none;
 }
 
-.light .spotlight-overlay {
-  background: radial-gradient(circle at 15% 0%, rgba(158, 129, 137, 0.12), transparent 45%);
-}
-
-/* Glass cards with editorial borders */
-.glass-card {
-  background: rgba(247, 239, 231, 0.06);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
+/* White Cards with 1px #E6D2C4 border, rounded-2xl, and dual-layer shadow */
+.editorial-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.light .glass-card {
-  background: rgba(255, 255, 255, 0.70);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  border-radius: 1rem;
+.editorial-card:hover {
+  box-shadow: var(--shadow-card-hover);
 }
 
-/* Primary Button with Warm Editorial Gradient & Inner Highlight */
-.btn-editorial-primary {
-  background: linear-gradient(180deg, #E6D2C4 0%, #C7A9A2 100%);
-  color: #2A2127;
-  box-shadow: inset 0 1px 0 rgba(247, 239, 231, 0.5), 0 2px 8px rgba(20, 14, 18, 0.35);
+/* Primary Button: #A8456B that pops */
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--accent-text);
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease-in-out;
 }
 
-.btn-editorial-primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #F7EFE7 0%, #E6D2C4 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 12px rgba(20, 14, 18, 0.45);
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(168, 69, 107, 0.25);
   transform: translateY(-1px);
 }
 
-.btn-editorial-primary:active:not(:disabled) {
+.btn-primary:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: inset 0 1px 2px rgba(20, 14, 18, 0.2);
+}
+
+/* Secondary Button: white background, 1px #C7A9A2 border, #3E3239 text */
+.btn-secondary {
+  background-color: var(--surface);
+  border: 1px solid var(--border-secondary);
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(62, 50, 57, 0.04);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--surface-soft);
+  border-color: var(--text-muted);
 }

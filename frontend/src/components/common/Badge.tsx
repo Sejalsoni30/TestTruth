@@ -24,6 +24,7 @@ interface BadgeProps {
     | 'inconclusive'
     | 'killed'
     | 'timeout'
+    | 'no_coverage'
     | 'accent'
     | 'neutral';
   size?: 'sm' | 'md';
@@ -43,27 +44,30 @@ export const Badge: React.FC<BadgeProps> = ({
     md: 'text-xs px-3 py-1 font-medium gap-1.5',
   };
 
-  // Distinct hues strictly from the warm semantic specification
+  // Status colours mapped strictly to the specification:
+  // critical #B3261E | high #C75B12 | medium #B8860B | low #4F7A5C | info #3F6C9E
+  // Mutation: killed #4F7A5C | survived #B3261E | timeout #B8860B | no coverage #9E8189
   const variantStyles = {
-    critical: 'bg-critical/15 text-critical border border-critical/30',
-    high: 'bg-high/15 text-high border border-high/30',
-    medium: 'bg-medium/15 text-medium border border-medium/30',
-    low: 'bg-low/15 text-low border border-low/30',
-    info: 'bg-info/15 text-info border border-info/30',
+    critical: 'bg-critical/10 text-critical border border-critical/25',
+    high: 'bg-high/10 text-high border border-high/25',
+    medium: 'bg-medium/10 text-medium border border-medium/25',
+    low: 'bg-low/10 text-low border border-low/25',
+    info: 'bg-info/10 text-info border border-info/25',
 
-    // Findings
-    mismatch: 'bg-critical/15 text-critical border border-critical/30',
-    survived: 'bg-critical/15 text-critical border border-critical/30',
-    weak: 'bg-medium/15 text-medium border border-medium/30',
-    missing: 'bg-high/15 text-high border border-high/30',
-    inconclusive: 'bg-info/15 text-info border border-info/30',
+    // Findings aliases
+    mismatch: 'bg-critical/10 text-critical border border-critical/25',
+    survived: 'bg-mutation-survived/10 text-mutation-survived border border-mutation-survived/25',
+    weak: 'bg-medium/10 text-medium border border-medium/25',
+    missing: 'bg-high/10 text-high border border-high/25',
+    inconclusive: 'bg-info/10 text-info border border-info/25',
 
     // Mutation outcomes
-    killed: 'bg-low/15 text-low border border-low/30',
-    timeout: 'bg-medium/15 text-medium border border-medium/30',
+    killed: 'bg-mutation-killed/10 text-mutation-killed border border-mutation-killed/25',
+    timeout: 'bg-mutation-timeout/10 text-mutation-timeout border border-mutation-timeout/25',
+    no_coverage: 'bg-mutation-no-coverage/10 text-mutation-no-coverage border border-mutation-no-coverage/25',
 
-    accent: 'bg-accent/20 text-body border border-accent/40',
-    neutral: 'bg-surface-raised text-muted border border-border',
+    accent: 'bg-accent/10 text-accent border border-accent/25',
+    neutral: 'bg-surface-soft text-body border border-border',
   };
 
   // Default accessible icons for status
@@ -80,6 +84,7 @@ export const Badge: React.FC<BadgeProps> = ({
     killed: <CheckCircle2 className="w-3 h-3 shrink-0" />,
     info: <Info className="w-3 h-3 shrink-0" />,
     inconclusive: <Info className="w-3 h-3 shrink-0" />,
+    no_coverage: <HelpCircle className="w-3 h-3 shrink-0" />,
   };
 
   const renderIcon = icon !== undefined ? icon : defaultIcons[variant];

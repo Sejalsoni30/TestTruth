@@ -8,17 +8,13 @@ import {
   CheckCircle2,
   HelpCircle,
   Sparkles,
-  Sun,
-  Moon,
 } from 'lucide-react';
 import { Button } from '../components/common/Button.js';
 import { Card } from '../components/common/Card.js';
 import { Badge } from '../components/common/Badge.js';
-import { useTheme } from '../context/ThemeContext.js';
 
 export const LandingPage: React.FC = () => {
   const [demoSelectedMutant, setDemoSelectedMutant] = useState<number>(0);
-  const { theme, toggleTheme } = useTheme();
 
   const sampleMutants = [
     {
@@ -63,28 +59,18 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen app-bg text-body relative selection:bg-accent/30 selection:text-body">
-      {/* Corner Spotlight Overlay */}
-      <div className="fixed inset-0 spotlight-overlay z-0 pointer-events-none"></div>
-
-      {/* Top Navbar */}
-      <header className="border-b border-border bg-surface/70 backdrop-blur-md sticky top-0 z-40 transition-colors">
+    <div className="min-h-screen bg-bg text-body selection:bg-accent/20 selection:text-body">
+      {/* Top Navbar in Light Cream & White */}
+      <header className="border-b border-border bg-surface sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-b from-mauve-200 to-mauve-400 flex items-center justify-center shadow-elevation-sm">
-              <ShieldCheck className="w-5 h-5 text-mauve-950" />
+            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shadow-sm">
+              <ShieldCheck className="w-5 h-5 text-accent-text" />
             </div>
             <span className="font-bold text-lg font-mono text-body tracking-tight">TestTruth</span>
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={toggleTheme}
-              title={theme === 'dark' ? 'Switch to Light Cream theme' : 'Switch to Dark Mauve theme'}
-              className="p-2 rounded-full border border-border bg-surface-raised text-muted hover:text-body hover:border-accent transition-colors"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4 text-accent" /> : <Moon className="w-4 h-4 text-accent" />}
-            </button>
             <Link to="/login" className="text-xs text-muted hover:text-body font-medium px-3 py-1.5 transition-colors">
               Log in
             </Link>
@@ -97,22 +83,24 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-20 px-6 overflow-hidden z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/15 border border-accent/30 text-accent text-xs font-medium mb-6 shadow-elevation-sm">
-            <Sparkles className="w-3.5 h-3.5" />
+      {/* Hero Section in Dedicated Dark Mauve Gradient with Soft Cream Glow */}
+      <section className="hero-gradient text-sidebar-text py-24 px-6 relative">
+        <div className="absolute inset-0 hero-glow pointer-events-none"></div>
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-sidebar-text text-xs font-medium mb-6 backdrop-blur-sm">
+            <Sparkles className="w-3.5 h-3.5 text-accent" />
             <span>Auditing Test Suite Reliability & AI Test Blindspots</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-body leading-[1.18] mb-6">
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.18] mb-6">
             Your tests pass. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-mauve-100 via-mauve-300 to-mauve-500">
+            <span className="text-sidebar-muted">
               But are they actually catching bugs?
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+          <p className="text-lg sm:text-xl text-sidebar-muted max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
             TestTruth challenges your test suite, detects false confidence, and provides evidence of how reliably your
             tests identify defects.
           </p>
@@ -130,127 +118,125 @@ export const LandingPage: React.FC = () => {
             </a>
           </div>
 
-          {/* Social Proof / Principle Callout */}
-          <div className="mt-14 pt-8 border-t border-border flex flex-wrap items-center justify-center gap-8 text-xs text-muted font-mono">
-            <span className="flex items-center gap-2">
+          {/* Social Proof Callout */}
+          <div className="mt-14 pt-8 border-t border-white/10 flex flex-wrap items-center justify-center gap-8 text-xs text-sidebar-muted font-mono">
+            <span className="flex items-center gap-2 text-sidebar-text">
               <CheckCircle2 className="w-4 h-4 text-low" /> Reproducible Evidence Backed
             </span>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 text-sidebar-text">
               <CheckCircle2 className="w-4 h-4 text-accent" /> Isolated Sandboxes
             </span>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 text-sidebar-text">
               <CheckCircle2 className="w-4 h-4 text-medium" /> Zero False Claims
             </span>
           </div>
         </div>
       </section>
 
-      {/* Interactive Demo Section (Labeled "Sample data") */}
-      <section id="interactive-demo" className="py-16 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-3 py-0.5 text-[10px] font-mono font-semibold uppercase bg-medium/15 text-medium border border-medium/30 rounded-full">
-                  Sample data
-                </span>
-                <span className="text-xs font-mono text-muted">Live Interactive Demonstration</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-body tracking-tight">
-                Inspect How TestTruth Unmasks Weak Tests
-              </h2>
+      {/* Interactive Demo Section (Light Cream Background + White Cards) */}
+      <section id="interactive-demo" className="py-20 px-6 max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-3 py-0.5 text-[10px] font-mono font-semibold uppercase bg-medium/10 text-medium border border-medium/20 rounded-full">
+                Sample data
+              </span>
+              <span className="text-xs font-mono text-muted">Live Interactive Demonstration</span>
             </div>
-            <p className="text-xs text-muted max-w-md leading-relaxed">
-              Explore three real-world scenarios where tests report 100% green but fail under mutation or
-              assertion scrutiny.
-            </p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-body tracking-tight">
+              Inspect How TestTruth Unmasks Weak Tests
+            </h2>
+          </div>
+          <p className="text-xs text-muted max-w-md leading-relaxed">
+            Explore three real-world scenarios where tests report 100% green but fail under mutation or
+            assertion scrutiny.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left selector */}
+          <div className="space-y-3">
+            {sampleMutants.map((mutant) => (
+              <div
+                key={mutant.id}
+                onClick={() => setDemoSelectedMutant(mutant.id)}
+                className={`p-4 rounded-2xl border text-left cursor-pointer transition-all ${
+                  demoSelectedMutant === mutant.id
+                    ? 'bg-surface border-accent shadow-card-hover'
+                    : 'bg-surface/80 border-border hover:border-border-secondary hover:bg-surface'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-mono text-muted">{mutant.file}</span>
+                  <Badge variant={mutant.status} size="sm">
+                    {mutant.testResult}
+                  </Badge>
+                </div>
+                <h4 className="text-sm font-semibold text-body">{mutant.title}</h4>
+              </div>
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left selector */}
-            <div className="space-y-3">
-              {sampleMutants.map((mutant) => (
-                <div
-                  key={mutant.id}
-                  onClick={() => setDemoSelectedMutant(mutant.id)}
-                  className={`p-4 rounded-2xl border text-left cursor-pointer transition-all ${
-                    demoSelectedMutant === mutant.id
-                      ? 'bg-surface-raised border-accent shadow-elevation-md'
-                      : 'bg-surface/60 border-border hover:border-accent/40'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono text-muted">{mutant.file}</span>
-                    <Badge variant={mutant.status} size="sm">
-                      {mutant.testResult}
-                    </Badge>
+          {/* Right details view */}
+          <div className="lg:col-span-2">
+            <Card className="p-6 h-full flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
+                  <div>
+                    <span className="text-xs font-mono text-accent font-semibold">ANALYSIS EVIDENCE</span>
+                    <h3 className="text-base font-bold text-body">
+                      {sampleMutants[demoSelectedMutant].title}
+                    </h3>
                   </div>
-                  <h4 className="text-sm font-semibold text-body">{mutant.title}</h4>
-                </div>
-              ))}
-            </div>
-
-            {/* Right details view */}
-            <div className="lg:col-span-2">
-              <Card className="p-6 h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
-                    <div>
-                      <span className="text-xs font-mono text-accent font-semibold">ANALYSIS EVIDENCE</span>
-                      <h3 className="text-base font-bold text-body">
-                        {sampleMutants[demoSelectedMutant].title}
-                      </h3>
-                    </div>
-                    <Badge variant={sampleMutants[demoSelectedMutant].status}>
-                      {sampleMutants[demoSelectedMutant].testResult}
-                    </Badge>
-                  </div>
-
-                  <div className="space-y-4 mb-6">
-                    <div>
-                      <div className="text-xs font-mono text-muted mb-1">Original Code:</div>
-                      <pre className="p-3.5 rounded-xl bg-bg/80 text-body text-xs font-mono border border-border overflow-x-auto">
-                        {sampleMutants[demoSelectedMutant].original}
-                      </pre>
-                    </div>
-
-                    <div>
-                      <div className="text-xs font-mono text-muted mb-1">Mutated Code (Synthetic Bug):</div>
-                      <pre className="p-3.5 rounded-xl bg-critical/10 text-critical text-xs font-mono border border-critical/20 overflow-x-auto">
-                        {sampleMutants[demoSelectedMutant].mutated}
-                      </pre>
-                    </div>
-
-                    <div>
-                      <div className="text-xs font-mono text-muted mb-1">Why this test is unreliable:</div>
-                      <p className="text-sm text-body leading-relaxed bg-surface-raised/70 p-3.5 rounded-xl border border-border">
-                        {sampleMutants[demoSelectedMutant].explanation}
-                      </p>
-                    </div>
-
-                    <div>
-                      <div className="text-xs font-mono text-muted mb-1">Evidence & Trace:</div>
-                      <p className="text-xs font-mono text-muted bg-surface-raised/40 p-3 rounded-xl border border-border">
-                        {sampleMutants[demoSelectedMutant].evidence}
-                      </p>
-                    </div>
-                  </div>
+                  <Badge variant={sampleMutants[demoSelectedMutant].status}>
+                    {sampleMutants[demoSelectedMutant].testResult}
+                  </Badge>
                 </div>
 
-                <div className="pt-4 border-t border-border flex items-center justify-between text-xs text-muted">
-                  <span>Classified under Non-Negotiable Honesty Guidelines</span>
-                  <Link to="/register" className="text-accent hover:text-body font-semibold inline-flex items-center gap-1">
-                    Audit your repo <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <div className="text-xs font-mono text-muted mb-1">Original Code:</div>
+                    <pre className="p-3.5 rounded-xl bg-code-bg text-code-text text-xs font-mono border border-border overflow-x-auto">
+                      {sampleMutants[demoSelectedMutant].original}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-mono text-muted mb-1">Mutated Code (Synthetic Bug):</div>
+                    <pre className="p-3.5 rounded-xl bg-code-bg text-critical text-xs font-mono border border-critical/30 overflow-x-auto">
+                      {sampleMutants[demoSelectedMutant].mutated}
+                    </pre>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-mono text-muted mb-1">Why this test is unreliable:</div>
+                    <p className="text-sm text-body leading-relaxed bg-surface-soft p-3.5 rounded-xl border border-border">
+                      {sampleMutants[demoSelectedMutant].explanation}
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-mono text-muted mb-1">Evidence & Trace:</div>
+                    <p className="text-xs font-mono text-muted bg-surface-soft/60 p-3 rounded-xl border border-border">
+                      {sampleMutants[demoSelectedMutant].evidence}
+                    </p>
+                  </div>
                 </div>
-              </Card>
-            </div>
+              </div>
+
+              <div className="pt-4 border-t border-border flex items-center justify-between text-xs text-muted">
+                <span>Classified under Non-Negotiable Honesty Guidelines</span>
+                <Link to="/register" className="text-accent hover:text-accent-hover font-semibold inline-flex items-center gap-1">
+                  Audit your repo <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* How it Works Section */}
-      <section className="py-20 px-6 max-w-7xl mx-auto relative z-10">
+      <section className="py-20 px-6 max-w-7xl mx-auto border-t border-border">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl font-bold text-body mb-4 tracking-tight">How TestTruth Works</h2>
           <p className="text-muted text-sm leading-relaxed">
@@ -260,8 +246,8 @@ export const LandingPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="p-6 relative group hover:border-accent/40 transition-colors">
-            <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent mb-5 shadow-elevation-sm">
+          <Card className="p-6 relative group hover:border-accent transition-colors">
+            <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-5 shadow-sm">
               <Code2 className="w-6 h-6" />
             </div>
             <div className="text-xs font-mono text-accent uppercase font-semibold mb-2">Step 01</div>
@@ -271,8 +257,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </Card>
 
-          <Card className="p-6 relative group hover:border-accent/40 transition-colors">
-            <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent mb-5 shadow-elevation-sm">
+          <Card className="p-6 relative group hover:border-accent transition-colors">
+            <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-5 shadow-sm">
               <Dna className="w-6 h-6" />
             </div>
             <div className="text-xs font-mono text-accent uppercase font-semibold mb-2">Step 02</div>
@@ -282,8 +268,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </Card>
 
-          <Card className="p-6 relative group hover:border-accent/40 transition-colors">
-            <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent mb-5 shadow-elevation-sm">
+          <Card className="p-6 relative group hover:border-accent transition-colors">
+            <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-5 shadow-sm">
               <Sparkles className="w-6 h-6" />
             </div>
             <div className="text-xs font-mono text-accent uppercase font-semibold mb-2">Step 03</div>
@@ -296,7 +282,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-6 max-w-4xl mx-auto relative z-10">
+      <section className="py-20 px-6 max-w-4xl mx-auto border-t border-border">
         <h2 className="text-3xl font-bold text-body text-center mb-12 tracking-tight">Frequently Asked Questions</h2>
         <div className="space-y-6">
           <Card className="p-6">
@@ -332,11 +318,11 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-10 px-6 text-center text-xs text-muted relative z-10">
+      <footer className="border-t border-border py-10 px-6 text-center text-xs text-muted">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 font-mono">
             <ShieldCheck className="w-4 h-4 text-accent" />
-            <span>TestTruth © 2026. Warm, editorial test reliability auditing.</span>
+            <span>TestTruth © 2026. Auditing test suite reliability with measurable proof.</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/login" className="hover:text-body">Log In</Link>
