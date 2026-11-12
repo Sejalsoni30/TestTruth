@@ -32,6 +32,8 @@ import { Button } from '../components/common/Button.js';
 import { Badge } from '../components/common/Badge.js';
 import { Modal } from '../components/common/Modal.js';
 import { useProject } from '../context/ProjectContext.js';
+import { motion } from 'framer-motion';
+import { AnimatedCounter } from '../components/motion/AnimatedCounter.js';
 
 export const DashboardPage: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
@@ -123,68 +125,92 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Cards Grid (White cards, 1px #E6D2C4 border, shadow-card) */}
+      {/* KPI Cards Grid (Interactive Motion Cards with Animated Counters) */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between text-muted mb-2">
-            <span className="text-[11px] font-mono uppercase font-semibold">Projects</span>
-            <FolderGit2 className="w-4 h-4 text-accent" />
-          </div>
-          <div className="text-2xl font-bold text-body">{m.totalProjects}</div>
-          <div className="text-[10px] text-muted mt-1 font-medium">Active workspaces</div>
-        </Card>
+        <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.15 }}>
+          <Card className="p-4 h-full">
+            <div className="flex items-center justify-between text-muted mb-2">
+              <span className="text-[11px] font-mono uppercase font-semibold">Projects</span>
+              <FolderGit2 className="w-4 h-4 text-accent" />
+            </div>
+            <div className="text-2xl font-bold text-body">
+              <AnimatedCounter value={m.totalProjects} />
+            </div>
+            <div className="text-[10px] text-muted mt-1 font-medium">Active workspaces</div>
+          </Card>
+        </motion.div>
 
-        <Card className="p-4">
-          <div className="flex items-center justify-between text-muted mb-2">
-            <span className="text-[11px] font-mono uppercase font-semibold">Tests Audited</span>
-            <Activity className="w-4 h-4 text-accent" />
-          </div>
-          <div className="text-2xl font-bold text-body">{m.testsAnalysed}</div>
-          <div className="text-[10px] text-low mt-1 font-medium">
-            {m.passedExecution} pass / {m.failedExecution} fail
-          </div>
-        </Card>
+        <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.15 }}>
+          <Card className="p-4 h-full">
+            <div className="flex items-center justify-between text-muted mb-2">
+              <span className="text-[11px] font-mono uppercase font-semibold">Tests Audited</span>
+              <Activity className="w-4 h-4 text-accent" />
+            </div>
+            <div className="text-2xl font-bold text-body">
+              <AnimatedCounter value={m.testsAnalysed} />
+            </div>
+            <div className="text-[10px] text-low mt-1 font-medium">
+              {m.passedExecution} pass / {m.failedExecution} fail
+            </div>
+          </Card>
+        </motion.div>
 
-        <Card className="p-4">
-          <div className="flex items-center justify-between text-muted mb-2">
-            <span className="text-[11px] font-mono uppercase font-semibold">Surviving Mutants</span>
-            <Dna className="w-4 h-4 text-critical" />
-          </div>
-          <div className="text-2xl font-bold text-critical">{m.survivingMutations}</div>
-          <div className="text-[10px] text-muted mt-1">{m.totalMutants} mutants injected</div>
-        </Card>
+        <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.15 }}>
+          <Card className="p-4 h-full">
+            <div className="flex items-center justify-between text-muted mb-2">
+              <span className="text-[11px] font-mono uppercase font-semibold">Surviving Mutants</span>
+              <Dna className="w-4 h-4 text-critical" />
+            </div>
+            <div className="text-2xl font-bold text-critical">
+              <AnimatedCounter value={m.survivingMutations} />
+            </div>
+            <div className="text-[10px] text-muted mt-1">{m.totalMutants} mutants injected</div>
+          </Card>
+        </motion.div>
 
-        <Card className="p-4">
-          <div className="flex items-center justify-between text-muted mb-2">
-            <span className="text-[11px] font-mono uppercase font-semibold">Kill Rate</span>
-            <TrendingUp className="w-4 h-4 text-low" />
-          </div>
-          <div className="text-2xl font-bold text-low">{m.killRate}%</div>
-          <div
-            className="text-[10px] text-muted mt-1 cursor-pointer hover:underline hover:text-body"
-            onClick={() => setShowFormulaModal(true)}
-          >
-            View formula & limits
-          </div>
-        </Card>
+        <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.15 }}>
+          <Card className="p-4 h-full">
+            <div className="flex items-center justify-between text-muted mb-2">
+              <span className="text-[11px] font-mono uppercase font-semibold">Kill Rate</span>
+              <TrendingUp className="w-4 h-4 text-low" />
+            </div>
+            <div className="text-2xl font-bold text-low">
+              <AnimatedCounter value={m.killRate} decimals={1} suffix="%" />
+            </div>
+            <div
+              className="text-[10px] text-muted mt-1 cursor-pointer hover:underline hover:text-body"
+              onClick={() => setShowFormulaModal(true)}
+            >
+              View formula & limits
+            </div>
+          </Card>
+        </motion.div>
 
-        <Card className="p-4">
-          <div className="flex items-center justify-between text-muted mb-2">
-            <span className="text-[11px] font-mono uppercase font-semibold">Weak Assertions</span>
-            <ShieldAlert className="w-4 h-4 text-medium" />
-          </div>
-          <div className="text-2xl font-bold text-medium">{m.weakAssertions}</div>
-          <div className="text-[10px] text-muted mt-1">Run-only or truthy only</div>
-        </Card>
+        <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.15 }}>
+          <Card className="p-4 h-full">
+            <div className="flex items-center justify-between text-muted mb-2">
+              <span className="text-[11px] font-mono uppercase font-semibold">Weak Assertions</span>
+              <ShieldAlert className="w-4 h-4 text-medium" />
+            </div>
+            <div className="text-2xl font-bold text-medium">
+              <AnimatedCounter value={m.weakAssertions} />
+            </div>
+            <div className="text-[10px] text-muted mt-1">Run-only or truthy only</div>
+          </Card>
+        </motion.div>
 
-        <Card className="p-4">
-          <div className="flex items-center justify-between text-muted mb-2">
-            <span className="text-[11px] font-mono uppercase font-semibold">Missing Scenarios</span>
-            <Sparkles className="w-4 h-4 text-high" />
-          </div>
-          <div className="text-2xl font-bold text-high">{m.missingScenarios}</div>
-          <div className="text-[10px] text-muted mt-1">Unchecked branches/edges</div>
-        </Card>
+        <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.15 }}>
+          <Card className="p-4 h-full">
+            <div className="flex items-center justify-between text-muted mb-2">
+              <span className="text-[11px] font-mono uppercase font-semibold">Missing Scenarios</span>
+              <Sparkles className="w-4 h-4 text-high" />
+            </div>
+            <div className="text-2xl font-bold text-high">
+              <AnimatedCounter value={m.missingScenarios} />
+            </div>
+            <div className="text-[10px] text-muted mt-1">Unchecked branches/edges</div>
+          </Card>
+        </motion.div>
       </div>
 
       {/* Main Charts Row */}

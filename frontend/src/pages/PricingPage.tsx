@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   ShieldCheck,
   Check,
@@ -19,6 +20,7 @@ import { Badge } from '../components/common/Badge.js';
 import { Footer } from '../components/common/Footer.js';
 import { authService } from '../services/authService.js';
 import { useAuth } from '../context/AuthContext.js';
+import { MotionSpotlightCard } from '../components/motion/MotionSpotlightCard.js';
 
 export const PricingPage: React.FC = () => {
   const [annualBilling, setAnnualBilling] = useState(true);
@@ -217,27 +219,43 @@ export const PricingPage: React.FC = () => {
           </Button>
         </div>
 
-        {/* Billing Cycle Toggle */}
+        {/* Billing Cycle Toggle with MotionSites Sliding Pill */}
         <div className="flex items-center justify-center gap-3 mt-10">
-          <span className={`text-xs font-mono font-semibold ${!annualBilling ? 'text-body' : 'text-muted'}`}>
-            Monthly Billing
-          </span>
-          <button
-            onClick={() => setAnnualBilling(!annualBilling)}
-            className="w-12 h-6 bg-surface-soft border border-border rounded-full p-1 transition-colors relative"
-          >
-            <div
-              className={`w-4 h-4 rounded-full bg-accent transition-transform ${
-                annualBilling ? 'translate-x-6' : 'translate-x-0'
+          <div className="inline-flex p-1 bg-surface-soft border border-border rounded-xl">
+            <button
+              onClick={() => setAnnualBilling(false)}
+              className={`px-4 py-1.5 text-xs font-mono font-semibold rounded-lg transition-all relative ${
+                !annualBilling ? 'text-accent' : 'text-muted hover:text-body'
               }`}
-            />
-          </button>
-          <span className={`text-xs font-mono font-semibold flex items-center gap-1.5 ${annualBilling ? 'text-body' : 'text-muted'}`}>
-            Annual Billing
-            <span className="bg-low/20 text-low px-2 py-0.5 rounded-full text-[10px] font-bold">
-              Save 20%
-            </span>
-          </span>
+            >
+              {!annualBilling && (
+                <motion.div
+                  layoutId="billingCycle"
+                  className="absolute inset-0 bg-surface rounded-lg shadow-sm border border-border"
+                  transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                />
+              )}
+              <span className="relative z-10">Monthly Billing</span>
+            </button>
+            <button
+              onClick={() => setAnnualBilling(true)}
+              className={`px-4 py-1.5 text-xs font-mono font-semibold rounded-lg transition-all relative flex items-center gap-1.5 ${
+                annualBilling ? 'text-accent' : 'text-muted hover:text-body'
+              }`}
+            >
+              {annualBilling && (
+                <motion.div
+                  layoutId="billingCycle"
+                  className="absolute inset-0 bg-surface rounded-lg shadow-sm border border-border"
+                  transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                />
+              )}
+              <span className="relative z-10">Annual Billing</span>
+              <span className="relative z-10 bg-low/20 text-low px-1.5 py-0.5 rounded-full text-[10px] font-bold">
+                Save 20%
+              </span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -247,59 +265,65 @@ export const PricingPage: React.FC = () => {
           {plans.map((plan) => {
             const price = annualBilling ? plan.priceAnnual : plan.priceMonthly;
             return (
-              <Card
+              <motion.div
                 key={plan.name}
-                className={`p-7 flex flex-col justify-between relative transition-all ${
-                  plan.popular
-                    ? 'border-accent shadow-elevation-md ring-2 ring-accent/30 bg-surface'
-                    : 'bg-surface hover:shadow-elevation-sm'
-                }`}
+                whileHover={{ y: -6 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                className="flex"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-bold text-body">{plan.name}</h3>
-                    <Badge variant={plan.popular ? 'accent' : 'neutral'} size="sm">
-                      {plan.badge}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted leading-relaxed min-h-[40px] mb-6">
-                    {plan.tagline}
-                  </p>
-
-                  <div className="mb-6 pb-6 border-b border-border">
-                    <div className="flex items-baseline gap-1 font-mono">
-                      <span className="text-4xl font-extrabold text-body">${price}</span>
-                      <span className="text-xs text-muted">/ month</span>
-                    </div>
-                    {annualBilling && price > 0 && (
-                      <span className="text-[11px] text-low font-mono mt-1 block">
-                        Billed annually (${price * 12}/year)
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 mb-8">
-                    <span className="text-[11px] font-mono text-muted uppercase font-semibold block">
-                      INCLUDED CAPABILITIES:
-                    </span>
-                    {plan.features.map((f, i) => (
-                      <div key={i} className="flex items-start gap-2.5 text-xs text-body">
-                        <Check className="w-4 h-4 text-low shrink-0 mt-0.5" />
-                        <span>{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <Button
-                  size="md"
-                  variant={plan.ctaVariant}
-                  onClick={plan.ctaAction}
-                  className="w-full justify-center"
+                <Card
+                  className={`p-7 flex flex-col justify-between relative transition-all w-full ${
+                    plan.popular
+                      ? 'border-accent shadow-elevation-md ring-2 ring-accent/30 bg-surface'
+                      : 'bg-surface hover:shadow-elevation-sm'
+                  }`}
                 >
-                  {plan.ctaText}
-                </Button>
-              </Card>
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-bold text-body">{plan.name}</h3>
+                      <Badge variant={plan.popular ? 'accent' : 'neutral'} size="sm">
+                        {plan.badge}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted leading-relaxed min-h-[40px] mb-6">
+                      {plan.tagline}
+                    </p>
+
+                    <div className="mb-6 pb-6 border-b border-border">
+                      <div className="flex items-baseline gap-1 font-mono">
+                        <span className="text-4xl font-extrabold text-body">${price}</span>
+                        <span className="text-xs text-muted">/ month</span>
+                      </div>
+                      {annualBilling && price > 0 && (
+                        <span className="text-[11px] text-low font-mono mt-1 block">
+                          Billed annually (${price * 12}/year)
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="space-y-3 mb-8">
+                      <span className="text-[11px] font-mono text-muted uppercase font-semibold block">
+                        INCLUDED CAPABILITIES:
+                      </span>
+                      {plan.features.map((f, i) => (
+                        <div key={i} className="flex items-start gap-2.5 text-xs text-body">
+                          <Check className="w-4 h-4 text-low shrink-0 mt-0.5" />
+                          <span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button
+                    size="md"
+                    variant={plan.ctaVariant}
+                    onClick={plan.ctaAction}
+                    className="w-full justify-center shadow-sm"
+                  >
+                    {plan.ctaText}
+                  </Button>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
