@@ -207,3 +207,4 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ className = '' }) =>
     </header>
   );
 };
+
