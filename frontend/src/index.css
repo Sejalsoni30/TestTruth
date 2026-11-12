@@ -70,15 +70,17 @@
   }
 }
 
-/* Dedicated Hero styling: gradient #3E3239 to #6B5560 with soft glow top-left */
+/* Dedicated Hero styling: rich obsidian jewel mauve with radiant ambient glows */
 .hero-gradient {
-  background: linear-gradient(135deg, #3E3239 0%, #6B5560 100%);
+  background: radial-gradient(circle at 50% -10%, #381E2E 0%, #22141D 50%, #140C12 100%);
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid rgba(230, 210, 196, 0.12);
 }
 
 .hero-glow {
-  background: radial-gradient(circle at 15% 0%, rgba(230, 210, 196, 0.25), transparent 50%);
+  background: radial-gradient(circle at 20% 0%, rgba(168, 69, 107, 0.35), transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(230, 210, 196, 0.20), transparent 45%);
   pointer-events: none;
 }
 
