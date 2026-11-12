@@ -20,3 +20,4 @@ COPY samples ./samples
 
 EXPOSE 5000
 CMD ["node", "dist/index.js"]
+

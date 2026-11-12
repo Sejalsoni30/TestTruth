@@ -10,3 +10,4 @@ services:
       - NODE_ENV=production
       - JWT_SECRET=testtruth-production-secret-replace-with-secure-key
     restart: unless-stopped
+
