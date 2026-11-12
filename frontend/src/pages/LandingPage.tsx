@@ -101,7 +101,7 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* Cinematic Hero Section with Motion Mesh */}
-      <section className="hero-gradient text-sidebar-text py-24 sm:py-32 px-6 relative">
+      <section className="hero-gradient text-sidebar-text pt-8 sm:pt-12 pb-14 sm:pb-16 px-6 relative">
         <HeroMeshBackground />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -109,7 +109,7 @@ export const LandingPage: React.FC = () => {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-sidebar-text text-xs font-mono font-medium mb-8 backdrop-blur-md shadow-lg"
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/20 text-sidebar-text text-xs font-mono font-medium mb-5 backdrop-blur-md shadow-lg"
           >
             <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
             <span>Auditing Test Suite Reliability & AI Blindspots</span>
@@ -119,7 +119,7 @@ export const LandingPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.14] mb-8"
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.14] mb-5"
           >
             Your tests pass.{' '}
             <br />
@@ -132,7 +132,7 @@ export const LandingPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg sm:text-xl text-sidebar-muted max-w-2xl mx-auto mb-10 leading-relaxed font-normal"
+            className="text-base sm:text-lg text-sidebar-muted max-w-2xl mx-auto mb-7 leading-relaxed font-normal"
           >
             TestTruth challenges your test suites with automated mutation testing, AST assertion auditing, and isolated sandboxes. Defeat false confidence with reproducible evidence.
           </motion.p>
