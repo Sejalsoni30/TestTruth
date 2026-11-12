@@ -427,3 +427,4 @@ export const InteractiveMutantSimulator: React.FC = () => {
     </div>
   );
 };
+

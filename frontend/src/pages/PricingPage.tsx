@@ -18,6 +18,7 @@ import { Card } from '../components/common/Card.js';
 import { Button } from '../components/common/Button.js';
 import { Badge } from '../components/common/Badge.js';
 import { Footer } from '../components/common/Footer.js';
+import { PublicNavbar } from '../components/common/PublicNavbar.js';
 import { authService } from '../services/authService.js';
 import { useAuth } from '../context/AuthContext.js';
 import { MotionSpotlightCard } from '../components/motion/MotionSpotlightCard.js';
@@ -146,45 +147,8 @@ export const PricingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg text-body selection:bg-accent/20 selection:text-body">
-      {/* Top Navbar */}
-      <header className="border-b border-border bg-surface sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-accent-text" />
-            </div>
-            <div>
-              <span className="font-bold text-lg font-mono text-body tracking-tight">TestTruth</span>
-              <span className="hidden sm:inline-block text-[10px] text-muted ml-2 font-mono uppercase font-semibold">PRICING</span>
-            </div>
-          </Link>
-
-          <nav className="flex items-center gap-6 text-xs font-medium">
-            <Link to="/" className="text-muted hover:text-body transition-colors">
-              Features
-            </Link>
-            <Link to="/pricing" className="text-accent font-semibold transition-colors">
-              Pricing
-            </Link>
-            <button
-              onClick={handleDemoAccess}
-              disabled={demoLoading}
-              className="text-muted hover:text-accent font-semibold transition-colors inline-flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-accent" />
-              <span>Explore Live Workspace</span>
-            </button>
-            <Link to="/login" className="text-muted hover:text-body transition-colors">
-              Log in
-            </Link>
-            <Link to="/register">
-              <Button size="sm" variant="primary">
-                Get Started
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      {/* Floating Glassmorphic Navbar */}
+      <PublicNavbar />
 
       {/* Hero Header */}
       <section className="py-16 px-6 max-w-5xl mx-auto text-center">

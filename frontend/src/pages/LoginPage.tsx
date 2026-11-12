@@ -17,6 +17,7 @@ import { useAuth } from '../context/AuthContext.js';
 import { Button } from '../components/common/Button.js';
 import { Card } from '../components/common/Card.js';
 import { Footer } from '../components/common/Footer.js';
+import { PublicNavbar } from '../components/common/PublicNavbar.js';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -68,51 +69,8 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col justify-between selection:bg-accent/20 selection:text-body">
-      {/* Top Navbar */}
-      <header className="border-b border-border bg-surface sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-accent-text" />
-            </div>
-            <span className="font-bold text-lg font-mono text-body tracking-tight">TestTruth</span>
-          </Link>
-
-          <nav className="flex items-center gap-5">
-            <Link
-              to="/"
-              className="text-xs text-muted hover:text-body font-medium transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              to="/pricing"
-              className="text-xs text-muted hover:text-accent font-medium transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              to="/docs"
-              className="text-xs text-muted hover:text-body font-medium transition-colors"
-            >
-              Docs
-            </Link>
-            <button
-              onClick={handleDemoLogin}
-              disabled={demoLoading}
-              className="text-xs text-accent hover:text-accent-hover font-semibold px-2 py-1 transition-colors inline-flex items-center gap-1"
-            >
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              <span>Live Demo</span>
-            </button>
-            <Link to="/register">
-              <Button size="sm" variant="primary">
-                Register
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      {/* Floating Glassmorphic Navbar */}
+      <PublicNavbar />
 
       {/* Main Form Container */}
       <main className="flex-1 flex items-center justify-center p-6 py-12">

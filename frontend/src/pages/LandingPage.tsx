@@ -19,6 +19,7 @@ import { Button } from '../components/common/Button.js';
 import { Card } from '../components/common/Card.js';
 import { Badge } from '../components/common/Badge.js';
 import { Footer } from '../components/common/Footer.js';
+import { PublicNavbar } from '../components/common/PublicNavbar.js';
 import { authService } from '../services/authService.js';
 import { useAuth } from '../context/AuthContext.js';
 import { HeroMeshBackground } from '../components/motion/HeroMeshBackground.js';
@@ -49,56 +50,8 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg text-body selection:bg-accent/20 selection:text-body overflow-x-hidden">
-      {/* Top Navbar */}
-      <header className="border-b border-border bg-surface/90 backdrop-blur-md sticky top-0 z-50 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <motion.div
-              whileHover={{ rotate: 12, scale: 1.05 }}
-              className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shadow-sm"
-            >
-              <ShieldCheck className="w-5 h-5 text-accent-text" />
-            </motion.div>
-            <span className="font-bold text-lg font-mono text-body tracking-tight group-hover:text-accent transition-colors">
-              TestTruth
-            </span>
-          </Link>
-
-          <nav className="flex items-center gap-5">
-            <Link
-              to="/pricing"
-              className="text-xs text-muted hover:text-accent font-semibold px-2 py-1 transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              to="/docs"
-              className="text-xs text-muted hover:text-body font-medium px-2 py-1 transition-colors hidden sm:inline-block"
-            >
-              Docs
-            </Link>
-            <button
-              onClick={handleDemoAccess}
-              disabled={demoLoading}
-              className="text-xs text-accent hover:text-accent-hover font-semibold px-2 py-1 transition-colors inline-flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 fill-current animate-pulse" />
-              <span>Launch Demo</span>
-            </button>
-            <Link
-              to="/login"
-              className="text-xs text-muted hover:text-body font-medium px-2 py-1 transition-colors"
-            >
-              Log in
-            </Link>
-            <Link to="/register">
-              <Button size="sm" variant="primary">
-                Get Started
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      {/* Sleek Floating Glassmorphic Navbar */}
+      <PublicNavbar />
 
       {/* Cinematic Hero Section with Motion Mesh */}
       <section className="hero-gradient text-sidebar-text pt-8 sm:pt-12 pb-14 sm:pb-16 px-6 relative">
@@ -224,21 +177,21 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Section 1: Interactive Live Sandbox Simulator */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
+      <section id="interactive-demo" className="py-20 px-6 max-w-7xl mx-auto scroll-mt-20">
         <MotionFadeIn>
           <InteractiveMutantSimulator />
         </MotionFadeIn>
       </section>
 
       {/* Section 2: Interactive Vulnerability & False Confidence Calculator */}
-      <section className="py-12 px-6 max-w-7xl mx-auto">
+      <section id="calculator" className="py-12 px-6 max-w-7xl mx-auto scroll-mt-20">
         <MotionFadeIn delay={0.1}>
           <TestSensitivityCalculator />
         </MotionFadeIn>
       </section>
 
       {/* Section 3: Three-Pillar Methodology with Motion Spotlight Cards */}
-      <section className="py-20 px-6 max-w-7xl mx-auto border-t border-border">
+      <section id="features" className="py-20 px-6 max-w-7xl mx-auto border-t border-border scroll-mt-20">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-accent/10 text-accent border border-accent/20 mb-3">
             Core Architecture
